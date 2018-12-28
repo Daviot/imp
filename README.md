@@ -1,11 +1,21 @@
 # imp
+
 CLI helper to get things done faster.
+
+## emojies
+(°-°) normal
+(°~°) confused
+(°O°) shocked
+(^-^) amused
+(^ᴗ^) happy
+(ᴗ_ᴗ) sad
+(×_×) dead
 
 ## todo
 
 ### 0.0.1
 
-- [ ] create logo
+- [x] create logo
 - [ ] add autocomplete
 - [ ] add command suggestion
 

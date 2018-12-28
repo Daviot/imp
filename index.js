@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+"use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
@@ -34,13 +35,17 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+exports.__esModule = true;
 var pjson = require('./package.json');
 // main tool dependencies
 var commander = require('commander');
 var enquirer = require('enquirer');
 var c = require('ansi-colors');
+var logo_1 = require("./ui/logo");
 // cli arguments
 commander.version(pjson.version).parse(process.argv);
+var logo = new logo_1["default"]();
+logo.write();
 // test();
 console.log(c.green('<(-.-)>'), c.dim('Work currently in progress!!!'));
 console.log(c.red("Don't use this before version " + c.bold('1.x') + " and it's currently in version " + c.bold(pjson.version) + ", seriously"));
