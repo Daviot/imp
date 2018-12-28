@@ -13,6 +13,7 @@ const c = require('ansi-colors');
 commander.version(pjson.version).parse(process.argv);
 // test();
 console.log(c.green('<(-.-)>'), c.dim('Work currently in progress!!!'));
+console.log(c.red(`Don't use this before version ${c.bold('1.x')} and it's currently in version ${c.bold(pjson.version)}, seriously`))
 
 async function test() {
     const response = await enquirer.prompt({

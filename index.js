@@ -43,6 +43,7 @@ var c = require('ansi-colors');
 commander.version(pjson.version).parse(process.argv);
 // test();
 console.log(c.green('<(-.-)>'), c.dim('Work currently in progress!!!'));
+console.log(c.red("Don't use this before version " + c.bold('1.x') + " and it's currently in version " + c.bold(pjson.version) + ", seriously"));
 function test() {
     return __awaiter(this, void 0, void 0, function () {
         var response;
