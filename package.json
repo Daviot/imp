@@ -1,5 +1,5 @@
 {
-  "name": "imp",
+  "name": "@daviot/imp",
   "version": "0.0.1",
   "description": "CLI helper to get things done faster.",
   "main": "index.js",
@@ -24,5 +24,6 @@
     "@types/node": "^10.12.18",
     "commander": "^2.19.0",
     "enquirer": "^2.3.0"
-  }
+  },
+  "devDependencies": {}
 }
