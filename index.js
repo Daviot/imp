@@ -37,18 +37,59 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 exports.__esModule = true;
 var pjson = require('./package.json');
+var config_modules = require('./config/modules.json');
 // main tool dependencies
+var spawn = require('child_process').spawn;
 var commander = require('commander');
 var enquirer = require('enquirer');
 var c = require('ansi-colors');
+var jetpack = require("fs-jetpack");
 var logo_1 = require("./ui/logo");
+var emoji_1 = require("./ui/emoji");
+var autoloader_1 = require("./system/autoloader");
+var env_1 = require("./models/env");
+var events_1 = require("events");
 // cli arguments
 commander.version(pjson.version).parse(process.argv);
+// ui
 var logo = new logo_1["default"]();
+var emoji = new emoji_1["default"]();
 logo.write();
+// load user settings
+var cwd = jetpack.cwd();
+console.log(cwd);
+// get the current users home directory
+var homedir = require('os').homedir();
+console.log(homedir);
+// const ls = spawn('ls', ['-lh', '/usr']);
+// ls.stdout.on('data', data => {
+//     console.log(`stdout: ${data}`);
+// });
+// ls.stderr.on('data', data => {
+//     console.log(`stderr: ${data}`);
+// });
+// ls.on('close', code => {
+//     console.log(`child process exited with code ${code}`);
+// });
+// the environment for all modules
+var env = new env_1.Env(new events_1.EventEmitter(), function (mood, message) {
+    if (mood) {
+        console.log(c.green(emoji.get(mood)), c.dim(message));
+    }
+}, pjson);
+if (parseInt(pjson.version.split('.')[0], 10) < 1) {
+    env.echo('confused', 'Work currently in progress!!!');
+    console.log(c.red("Don't use this before version " + c.bold('1.x') + " and it's currently in version " + c.bold(pjson.version) + ", seriously"));
+    console.log('');
+}
+// bind events
+env.event.on('imp:module:add', function (data) {
+    console.log('imp:module:add', data);
+});
+// Autoload the modules of the configuration
+var modules = new autoloader_1["default"](jetpack, config_modules, env);
+console.log(modules);
 // test();
-console.log(c.green('<(-.-)>'), c.dim('Work currently in progress!!!'));
-console.log(c.red("Don't use this before version " + c.bold('1.x') + " and it's currently in version " + c.bold(pjson.version) + ", seriously"));
 function test() {
     return __awaiter(this, void 0, void 0, function () {
         var response;

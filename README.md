@@ -16,6 +16,8 @@ CLI helper to get things done faster.
 ### 0.0.1
 
 - [x] create logo
+- [x] create emojis
+- [ ] add "about" module
 - [ ] add autocomplete
 - [ ] add command suggestion
 
@@ -26,10 +28,14 @@ CLI helper to get things done faster.
 
 ### 0.0.3
 
+- [ ] include Magento 2 cache-cleaner.js
+
+### 0.0.4
+
 - [ ] Git commit messages -> gitmoji
 - [ ] Git add selector
 - [ ] Git flow helper
 
-### 0.0.4
+### 0.0.5
 
 - [ ] Magento 2 module generator
