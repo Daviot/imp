@@ -25,6 +25,8 @@ const logo = new Logo();
 const emoji = new Emoji();
 logo.write();
 
+console.log(c.dim('v'), c.green(pjson.version));
+
 // load user settings
 const cwd = jetpack.cwd();
 console.log(cwd);

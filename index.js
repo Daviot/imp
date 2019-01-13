@@ -55,6 +55,7 @@ commander.version(pjson.version).parse(process.argv);
 var logo = new logo_1["default"]();
 var emoji = new emoji_1["default"]();
 logo.write();
+console.log(c.dim('v'), c.green(pjson.version));
 // load user settings
 var cwd = jetpack.cwd();
 console.log(cwd);
