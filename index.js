@@ -35,7 +35,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-exports.__esModule = true;
+Object.defineProperty(exports, "__esModule", { value: true });
 var pjson = require('./package.json');
 var config_modules = require('./config/modules.json');
 // main tool dependencies
@@ -46,14 +46,17 @@ var c = require('ansi-colors');
 var jetpack = require("fs-jetpack");
 var logo_1 = require("./ui/logo");
 var emoji_1 = require("./ui/emoji");
+var menu_1 = require("./system/menu");
 var autoloader_1 = require("./system/autoloader");
 var env_1 = require("./models/env");
 var events_1 = require("events");
 // cli arguments
 commander.version(pjson.version).parse(process.argv);
 // ui
-var logo = new logo_1["default"]();
-var emoji = new emoji_1["default"]();
+var logo = new logo_1.default();
+var emoji = new emoji_1.default();
+var term = require('terminal-kit').terminal;
+var menu = new menu_1.default();
 logo.write();
 console.log(c.dim('v'), c.green(pjson.version));
 // load user settings
@@ -86,11 +89,28 @@ if (parseInt(pjson.version.split('.')[0], 10) < 1) {
 // bind events
 env.event.on('imp:module:add', function (data) {
     console.log('imp:module:add', data);
+    if (data != null && data.hasOwnProperty('config')) {
+        if (data.hasOwnProperty('menu')) {
+            menu.add(data.config, data.menu);
+        }
+    }
 });
 // Autoload the modules of the configuration
-var modules = new autoloader_1["default"](jetpack, config_modules, env);
-console.log(modules);
-// test();
+var modules = new autoloader_1.default(jetpack, config_modules, env);
+console.log('#', modules);
+console.log('');
+console.log('Menu');
+var menuEntries = menu.allNames();
+console.log(menuEntries);
+var options = {
+    selectedStyle: term.green,
+    cancelable: true
+};
+console.log('Select module');
+term.singleLineMenu(menuEntries, options, function (error, response) {
+    term('\n').eraseLineAfter.green("#%s selected: %s (%s,%s)\n", response.selectedIndex, response.selectedText, response.x, response.y);
+    process.exit();
+});
 function test() {
     return __awaiter(this, void 0, void 0, function () {
         var response;
@@ -109,3 +129,4 @@ function test() {
         });
     });
 }
+//# sourceMappingURL=index.js.map

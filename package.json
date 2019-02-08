@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "watch": "tsc index -w"
+    "watch": "tsc *.ts --watch"
   },
   "repository": {
     "type": "git",
@@ -26,7 +26,8 @@
     "commander": "^2.19.0",
     "enquirer": "^2.3.0",
     "fs-jetpack": "^2.2.0",
-    "node-dependency-injection": "^2.2.1"
+    "node-dependency-injection": "^2.2.1",
+    "terminal-kit": "^1.26.11"
   },
   "devDependencies": {}
 }

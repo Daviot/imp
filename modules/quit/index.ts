@@ -1,17 +1,16 @@
 import { Env } from './../../models/env';
 
-export default class About {
+export default class QuitMod {
     constructor(config, env: Env) {
         env.event.emit('imp:module:add', {
             config: config,
             // defines the menu entries for quick navigation and the select menu
             menu: {
                 _: () => {
-                    env.echo('happy', "Hy I'm your personal imp for development tasks");
-                    console.log('copyright Daviot<daviot@live.at>');
+                    console.log('Quit!');
                 },
-                website: () => {
-                    console.log(env.package.homepage);
+                kill: ()=> {
+                    console.log('kill n Quit!');
                 }
             }
         });

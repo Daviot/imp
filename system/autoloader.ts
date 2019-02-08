@@ -10,13 +10,13 @@ export default class Autoloader {
                 // load all given modules
                 config_modules.autoload.map((config: string | AutoloadModule) => {
                     const module = new AutoloadModule(config);
-                    const modulePath = `${cwd}/modules/${module.module.toLowerCase()}/index.js`;
+                    const modulePath = `${cwd}/modules/${module.module.toLowerCase()}/index`;
                     // load and call the module
-                    if (jetpack.exists(modulePath)) {
+                    if (jetpack.exists(modulePath+'.ts')) {
                         const moduleConstructor = require(modulePath);
                         if (moduleConstructor && moduleConstructor.hasOwnProperty('default')) {
                             modules[module.module] = moduleConstructor.default;
-                            modules[module.module](env);
+                            modules[module.module](config, env);
                         } else {
                             env.echo(
                                 'confused',

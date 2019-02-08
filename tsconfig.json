@@ -3,13 +3,17 @@
       "module": "commonjs",
       "target": "es5",
       "noImplicitAny": false,
-      "outDir": "built",
+      "outDir": ".",
       "rootDir": ".",
-      "sourceMap": false,
-      "moduleResolution": "node"
+      "sourceMap": true,
+      "moduleResolution": "node",
+      "watch": true
     },
     "files": [
       "index.ts"
+    ],
+    "include": [
+      "**/*.ts"
     ],
     "exclude": [
       "node_modules"
