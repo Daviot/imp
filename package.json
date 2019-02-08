@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "watch": "tsc *.ts --watch"
+    "watch": "tsc *.ts --watch",
+    "build": "tsc index; cp package.json built/package.json; cp -r ./config ./built/config"
   },
   "repository": {
     "type": "git",
