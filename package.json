@@ -5,8 +5,10 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "watch": "tsc *.ts --watch",
-    "build": "tsc index; cp package.json built/package.json; cp -r ./config ./built/config"
+    "watch": "tsc --watch",
+    "build": "tsc; cp package.json built/package.json; cp -r ./config ./built/; chmod +x ./built/index.js",
+    "clean": "rm -rf built; rm -rf {models,system,ui}/*.js; rm -rf {models,system,ui}/*.map",
+    "clea1n": "rm -rf built; rm models/*.js; rm system/*.js#; rm {models,system}/*.js.map; rm modules/**/*.js; rm modules/**/*.js.map"
   },
   "repository": {
     "type": "git",
