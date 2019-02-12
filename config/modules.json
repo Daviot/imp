@@ -1,11 +1,11 @@
 {
     "autoload": [
+        "About",
         {
             "name": "Magento",
             "module": "magento2",
             "description": "module full of magento helpers and wrappers"
         },
-        "Quit",
-        "About"
+        "Demo"
     ]
 }

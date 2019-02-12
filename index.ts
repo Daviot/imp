@@ -78,7 +78,7 @@ if (parseInt(pjson.version.split('.')[0], 10) < 1) {
 
 // bind events
 env.event.on('imp:module:add', data => {
-    console.log('imp:module:add', data);
+    //console.log('imp:module:add', data);
     if (data != null && data.hasOwnProperty('config')) {
         if (data.hasOwnProperty('menu')) {
             menu.add(data.config, data.menu);
@@ -88,35 +88,14 @@ env.event.on('imp:module:add', data => {
 
 // Autoload the modules of the configuration
 const modules = new Autoloader(jetpack, config_modules, env);
-console.log('#', modules);
 
-console.log('');
-console.log('Menu');
-const menuEntries = menu.allNames();
+menu.build();
 
-console.log(menuEntries);
-const options = {
-    y: 0,
-    selectedStyle: term.green,
-    cancelable: true
-};
-console.log('Select module');
-term.singleLineMenu(menuEntries, options, function(error, response) {
-    term('\n').eraseLineAfter.green(
-        '#%s selected: %s (%s,%s)\n',
-        response.selectedIndex,
-        response.selectedText,
-        response.x,
-        response.y
-    );
-    process.exit();
-});
-
-async function test() {
-    const response = await enquirer.prompt({
-        type: 'input',
-        name: 'username',
-        message: 'What is your username?'
-    });
-    console.log(response);
-}
+// async function test() {
+//     const response = await enquirer.prompt({
+//         type: 'input',
+//         name: 'username',
+//         message: 'What is your username?'
+//     });
+//     console.log(response);
+// }
