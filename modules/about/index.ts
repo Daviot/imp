@@ -9,26 +9,29 @@ export default class About {
             menu: {
                 _: () => {
                     env.echo('happy', "Hy I'm your personal imp for development tasks");
-                    console.log('copyright Daviot<daviot@live.at>');
+                    env.terminal('copyright Daviot https://github.com/Daviot ' + env.packageJson.license + '\n');
+                },
+                version: () => {
+                    env.terminal(env.packageJson.version + '\n');
                 },
                 website: {
                     _description: `Prints the website for ${env.packageJson.name}`,
                     _: () => {
-                        console.log(env.packageJson.homepage);
+                        env.terminal(env.packageJson.homepage + '\n');
                     }
+                },
+                author: () => {
+                    env.terminal(env.packageJson.author + '\n');
                 },
                 test: {
                     emoji: () => {
                         const emoji = new Emoji();
                         const keys = emoji.keys();
                         keys.map(name => {
-                            console.log(`console ${name} ${emoji.get(name, true)}`)
+                            console.log(`console ${name} ${emoji.get(name, true)}`);
                             env.terminal.green(`terminal-kit ${name} ${emoji.get(name)}\n`);
                         });
                     }
-                },
-                version: () => {
-                    env.terminal(env.packageJson.version + '\n');
                 }
             }
         });
