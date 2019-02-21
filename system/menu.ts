@@ -1,5 +1,5 @@
-import { AutoloadModule } from "../models/config-modules";
-import { Env } from "../models/env";
+import { AutoloadModule } from '../models/config-modules';
+import { Env } from '../models/env';
 
 export default class Menu {
     menu: any = null;
@@ -20,7 +20,14 @@ export default class Menu {
     }
 
     get(name: string) {
-        return this.menu.find(item => {
+        return this.getChild(this.menu, name);
+    }
+
+    getChild(parent: any, name: string) {
+        if (parent == null) {
+            return null;
+        }
+        return parent.find(item => {
             return item.name == name;
         });
     }
@@ -29,29 +36,121 @@ export default class Menu {
         return this.menu.filter(m => m.name != null && m.name != '').map(m => m.name);
     }
 
-    build() {
-        const menuEntries = this.allNames(),
-        term = require('terminal-kit').terminal,
-        options = {
-            selectedStyle: term.green,
-            cancelable: true
-        };
-
-        term.singleLineMenu(menuEntries, options, (error, res) => {
-            console.error('error', error)
-            if(error != null && error.canceled == true) {
-                term('end');
-            }
-            //term.clear();
-            console.log(res);
-            const module = this.get(res.selectedText);
-            if(module != null && module.methods != null) {
-                const keys = Object.keys(module.methods);
-                console.log(keys);
-            } else {
-                this.env.echo('confused', `Module ${module.name} has no methods!`);
-            }
+    build(menuEntries = null, menu = null, options = null) {
+        // when nothing is available try to get menu
+        if (menuEntries == null) {
+            menuEntries = this.allNames();
+        }
+        if (menu == null) {
+            menu = this.menu;
+        }
+        // check if something is available
+        if (menuEntries == null || menuEntries.length == 0) {
+            this.env.echo('dead', 'No menu entries available');
             process.exit();
+        }
+        // default options
+        if (options == null) {
+            options = {
+                selectedStyle: this.env.terminal.green,
+                cancelable: true
+            };
+        }
+
+        this.env.terminal.singleLineMenu(menuEntries, options, (error, res) => {
+            this.selected(error, res, menu);
         });
+    }
+
+    selected(error, res, menu) {
+        this.env.terminal.clear();
+        debugger;
+        // error appears
+        if (error != null) {
+            this.env.terminal.red(error);
+        }
+        // stop when selection was canceled
+        if (res.canceled == true) {
+            this.env.echo('dead', `U canceled, bye`);
+            process.exit();
+        }
+
+        if (menu == null) {
+            this.env.echo('dead', `No menu to choose from`);
+            process.exit();
+        }
+        // get the selected module
+        const module = this.getChild(menu, res.selectedText);
+
+        if (module != null && module.methods != null) {
+            const keys = Object.keys(module.methods);
+
+            // check if default method is available and call it
+            if(typeof module.methods == 'function') {
+                module.methods(this.env);
+            }
+            if (keys.indexOf('_') >= 0) {
+                module.methods._(this.env);
+            }
+            //console.log(menu);
+            // build the submenu when available
+            let subMenuKeys = keys.filter(k => {
+                return k != '_';
+            });
+            const subMenu = subMenuKeys.map(k => {
+                let mod = module.methods[k];
+                let modName = `${module.config.module}:${k}`;
+                let description = mod._description ? mod._description : '';
+                let methods = null;
+                switch ((typeof mod).toLowerCase()) {
+                    case 'function':
+                        methods = mod;
+                        break;
+                    case 'object':
+                        // only the default is available
+                        if (mod.hasOwnProperty('_')) {
+                            methods = mod._;
+                        }
+                        // all properties starting with a _ are properties of the parent
+                        const methodKeys = Object.keys(mod).filter((k)=> k.indexOf('_') != 0);
+                        if(methodKeys.length > 0) {
+                            // reset methods
+                            methods = {};
+                            // set default
+                            if (mod.hasOwnProperty('_')) {
+                                methods._ = mod._;
+                            }
+                            // set all other methods
+                            methodKeys.map((mk)=> {
+                                methods[mk] = mod[mk];
+                            });
+                        }
+                        break;
+                    default:
+                        this.env.echo('shocked', `unknown type "${typeof mod}" of "${modName}"`);
+                        break;
+                }
+                const data = {
+                    name: k,
+                    config: {
+                        name: k,
+                        description: description,
+                        module: modName
+                    },
+                    methods: methods
+                };
+                return data;
+            });
+            // build the menu for the next level
+            if(subMenuKeys.length > 0) {
+                this.build(subMenuKeys, subMenu);
+            } else {
+                // when no submenu is available the work is done
+                process.exit();
+            }
+        } else {
+            this.env.echo('shocked', `Module ${module.name} has no methods!`);
+            process.exit();
+        }
     }
 }
