@@ -3,13 +3,13 @@
 CLI helper to get things done faster.
 
 ## emojies
-(°-°) normal
-(°~°) confused
-(°O°) shocked
-(^-^) amused
-(^ᴗ^) happy
-(ᴗ_ᴗ) sad
-(×_×) dead
+- (°-°) normal
+- (°~°) confused
+- (°O°) shocked
+- (^-^) amused
+- (^ᴗ^) happy
+- (ᴗ_ᴗ) sad
+- (×_×) dead
 
 ## todo
 
@@ -17,7 +17,7 @@ CLI helper to get things done faster.
 
 - [x] create logo
 - [x] create emojis
-- [ ] add "about" module
+- [x] add "about" module
 - [ ] add autocomplete
 - [ ] add command suggestion
 
