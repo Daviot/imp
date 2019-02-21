@@ -46,7 +46,7 @@ const env = new Env(
         if (mood == null) {
             mood = 'normal';
         }
-        terminal.green(emoji.get(mood) + '- ').defaultColor(message + '\n');
+        terminal.green(emoji.get(mood) + ' ').defaultColor(message + '\n');
     },
     pjson,
     terminal
