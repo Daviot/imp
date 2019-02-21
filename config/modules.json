@@ -6,6 +6,11 @@
             "module": "magento2",
             "description": "module full of magento helpers and wrappers"
         },
-        "Demo"
+        "Demo",
+        {
+            "name": "Quit",
+            "module": "quit",
+            "alias": ["exit", "stop"]
+        }
     ]
 }
