@@ -32,6 +32,40 @@ export default class Menu {
         });
     }
 
+    getList(): string[] {
+        let list = [];
+        //console.log('getlist')
+        //console.log(this.menu);
+        this.menu.map((menuEntry)=> {
+            const partial = this.buildList(menuEntry.methods, menuEntry.config.module);
+            list.push(...partial);
+        });
+        return list;
+    }
+
+    buildList(parent, parentName): string[] {
+        let partial = [];
+        if(parent.hasOwnProperty('_')) {
+            partial.push(parentName);
+        }
+        const keys = Object.keys(parent);
+        keys.filter(key => key != '_').map((key)=> {
+            // is a callable function, finish
+            if(typeof parent[key] == 'function') {
+                partial.push(this.combineChildWithParentKey(parentName,key))
+            }
+            if(typeof parent[key] == 'object') {
+                const partialChild = this.buildList(parent[key], this.combineChildWithParentKey(parentName,key));
+                partial.push(...partialChild);
+            }
+        });
+        return partial;
+    }
+
+    combineChildWithParentKey(parent: string, child: string) {
+        return `${parent}:${child}`
+    }
+
     allNames() {
         return this.menu.filter(m => m.name != null && m.name != '').map(m => m.name);
     }
@@ -86,7 +120,7 @@ export default class Menu {
             const keys = Object.keys(module.methods);
 
             // check if default method is available and call it
-            if(typeof module.methods == 'function') {
+            if (typeof module.methods == 'function') {
                 module.methods(this.env);
             }
             if (keys.indexOf('_') >= 0) {
@@ -112,8 +146,8 @@ export default class Menu {
                             methods = mod._;
                         }
                         // all properties starting with a _ are properties of the parent
-                        const methodKeys = Object.keys(mod).filter((k)=> k.indexOf('_') != 0);
-                        if(methodKeys.length > 0) {
+                        const methodKeys = Object.keys(mod).filter(k => k.indexOf('_') != 0);
+                        if (methodKeys.length > 0) {
                             // reset methods
                             methods = {};
                             // set default
@@ -121,7 +155,7 @@ export default class Menu {
                                 methods._ = mod._;
                             }
                             // set all other methods
-                            methodKeys.map((mk)=> {
+                            methodKeys.map(mk => {
                                 methods[mk] = mod[mk];
                             });
                         }
@@ -142,7 +176,7 @@ export default class Menu {
                 return data;
             });
             // build the menu for the next level
-            if(subMenuKeys.length > 0) {
+            if (subMenuKeys.length > 0) {
                 this.build(subMenuKeys, subMenu);
             } else {
                 // when no submenu is available the work is done

@@ -17,6 +17,8 @@ import { EventEmitter } from 'events';
 // define modules to compile them -.-
 import About from './modules/about/index';
 import Magento2 from './modules/magento2/index';
+import AutoComplete from './system/auto-complete';
+import Events from './system/events';
 
 // cli arguments
 commander.version(pjson.version).parse(process.argv);
@@ -51,26 +53,29 @@ const env = new Env(
     pjson,
     terminal
 );
+
+// contains all events
+const eventProvider = new Events(env);
 // create menu
 const menu = new Menu(env);
+eventProvider.menu(menu);
 
 if (parseInt(pjson.version.split('.')[0], 10) < 1) {
     env.echo('confused', 'Work currently in progress!!!');
-    console.log(`Don't use this before version ${'1.x'} and it's currently in version ${pjson.version}, seriously`);
+    terminal.red(`Don't use this before version ${terminal.str.bold('1.x')} and it's currently in version ${terminal.str.bold(pjson.version)}, seriously`);
     console.log('');
 }
 
-// bind events
-env.event.on('imp:module:add', data => {
-    //console.log('imp:module:add', data);
-    if (data != null && data.hasOwnProperty('config')) {
-        if (data.hasOwnProperty('menu')) {
-            menu.add(data.config, data.menu);
-        }
-    }
-});
 
 // Autoload the modules of the configuration
 const modules = new Autoloader(jetpack, config_modules, env);
 
-menu.build();
+// create auto complete
+const autoCompleteList = menu.getList();
+const autoComplete = new AutoComplete(env, autoCompleteList);
+eventProvider.autoComplete(autoComplete);
+console.log(autoCompleteList);
+
+env.event.emit('imp:auto-complete:start');
+
+//menu.build();
