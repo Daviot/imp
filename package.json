@@ -32,5 +32,7 @@
     "node-dependency-injection": "^2.2.1",
     "terminal-kit": "^1.26.11"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "node-inspect": "^1.11.5"
+  }
 }
