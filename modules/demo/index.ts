@@ -11,7 +11,7 @@ export default class Demo {
                     console.log('copyright Daviot<daviot@live.at>');
                 },
                 website: () => {
-                    console.log(env.package.homepage);
+                    console.log(env.packageJson.homepage);
                 }
             }
         });
