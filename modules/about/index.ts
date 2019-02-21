@@ -23,7 +23,7 @@ export default class About {
                         const keys = emoji.keys();
                         keys.map(name => {
                             console.log(`console ${name} ${emoji.get(name, true)}`)
-                            env.terminal.green(`terminal-kit${name} ${emoji.get(name)}\n`);
+                            env.terminal.green(`terminal-kit ${name} ${emoji.get(name)}\n`);
                         });
                     }
                 },
