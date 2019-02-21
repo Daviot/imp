@@ -3,10 +3,12 @@ import { EventEmitter } from "events";
 export class Env {
     event: EventEmitter;
     echo: any;
-    package: any;
-    constructor(event, echo, pack) {
+    packageJson: any;
+    terminal: any;
+    constructor(event, echo, packageJson, terminal) {
         this.event = event;
         this.echo = echo;
-        this.package = pack;
+        this.packageJson = packageJson;
+        this.terminal = terminal;
     }
 }

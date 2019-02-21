@@ -24,55 +24,39 @@ commander.version(pjson.version).parse(process.argv);
 // ui
 const logo = new Logo();
 const emoji = new Emoji();
-const term = require('terminal-kit').terminal;
-const menu = new Menu();
+const terminal = require('terminal-kit').terminal;
 logo.write();
 
-console.log(c.dim('v'), c.green(pjson.version));
-
+terminal
+    .dim('v ')
+    .green(pjson.version)
+    .defaultColor('\n');
 // load user settings
 const cwd = jetpack.cwd();
-console.log(cwd);
+//console.log(cwd);
 
 // get the current users home directory
 const homedir = require('os').homedir();
-
-console.log(homedir);
-
-// const ls = spawn('ls', ['-lh', '/usr']);
-
-// ls.stdout.on('data', data => {
-//     console.log(`stdout: ${data}`);
-// });
-
-// ls.stderr.on('data', data => {
-//     console.log(`stderr: ${data}`);
-// });
-
-// ls.on('close', code => {
-//     console.log(`child process exited with code ${code}`);
-// });
+//console.log(homedir);
 
 // the environment for all modules
 const env = new Env(
     new EventEmitter(),
     (mood, message) => {
-        if (mood) {
-            console.log(c.green(emoji.get(mood)), c.dim(message));
+        if (mood == null) {
+            mood = 'normal';
         }
+        terminal.green(emoji.get(mood) + '- ').defaultColor(message + '\n');
     },
-    pjson
+    pjson,
+    terminal
 );
+// create menu
+const menu = new Menu(env);
 
 if (parseInt(pjson.version.split('.')[0], 10) < 1) {
     env.echo('confused', 'Work currently in progress!!!');
-    console.log(
-        c.red(
-            `Don't use this before version ${c.bold('1.x')} and it's currently in version ${c.bold(
-                pjson.version
-            )}, seriously`
-        )
-    );
+    console.log(`Don't use this before version ${'1.x'} and it's currently in version ${pjson.version}, seriously`);
     console.log('');
 }
 
@@ -90,12 +74,3 @@ env.event.on('imp:module:add', data => {
 const modules = new Autoloader(jetpack, config_modules, env);
 
 menu.build();
-
-// async function test() {
-//     const response = await enquirer.prompt({
-//         type: 'input',
-//         name: 'username',
-//         message: 'What is your username?'
-//     });
-//     console.log(response);
-// }
