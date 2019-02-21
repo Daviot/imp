@@ -3,19 +3,27 @@ export default class Emoji {
         normal: '(°-°)',
         confused: '(°~°)',
         shocked: '(°O°)',
-        amused: '(^-^)',
-        happy: '(^ᴗ^)',
+        amused: '(^^-^^)',
+        happy: '(^^ᴗ^^)',
         sad: '(ᴗ_ᴗ)',
         dead: '(×_×)'
     };
 
-    get(name: string) {
+    get(name: string, raw: boolean = false) {
+        let val = Emoji.data.normal;
         if (name != null) {
             if (Emoji.data.hasOwnProperty(name)) {
-                return Emoji.data[name];
+                val = Emoji.data[name];
             }
         }
-        return Emoji.data.normal;
+        if(raw) {
+            val = val.replace(/\^\^/g, '^');
+        }
+        return val;
+    }
+
+    keys() {
+        return Object.keys(Emoji.data);
     }
 
     normal() {
