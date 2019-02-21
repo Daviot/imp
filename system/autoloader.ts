@@ -12,8 +12,8 @@ export default class Autoloader {
                     const module = new AutoloadModule(config);
                     const modulePath = `${cwd}/modules/${module.module.toLowerCase()}/index`;
                     // load and call the module
-                    if (jetpack.exists(modulePath+'.ts')) {
-                        env.echo('normal', `Load module ${modulePath}`)
+                    if (jetpack.exists(modulePath + '.ts') || jetpack.exists(modulePath + '.js')) {
+                        env.echo('happy', `Load module ${modulePath}`);
                         const moduleConstructor = require(modulePath);
                         console.log(moduleConstructor);
                         if (moduleConstructor && moduleConstructor.hasOwnProperty('default')) {
