@@ -30,6 +30,7 @@
     "enquirer": "^2.3.0",
     "fs-jetpack": "^2.2.0",
     "node-dependency-injection": "^2.2.1",
+    "string-similarity": "^3.0.0",
     "terminal-kit": "^1.26.11"
   },
   "devDependencies": {
