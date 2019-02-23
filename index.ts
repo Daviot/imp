@@ -72,7 +72,7 @@ const modules = new Autoloader(jetpack, config_modules, env);
 
 // create auto complete
 const autoCompleteList = menu.getList();
-const autoComplete = new AutoComplete(env, autoCompleteList);
+const autoComplete = new AutoComplete(env, autoCompleteList, menu.menu);
 eventProvider.autoComplete(autoComplete);
 console.log(autoCompleteList);
 
