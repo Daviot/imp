@@ -1,15 +1,16 @@
 import { Env } from './../../models/env';
 import Emoji from '../../ui/emoji';
 
-export default class About {
+export default class AboutModule {
     constructor(config, env: Env) {
         env.event.emit('imp:module:add', {
             config: config,
             // defines the menu entries for quick navigation and the select menu
             menu: {
                 _: () => {
-                    env.echo('happy', "Hy I'm your personal imp for development tasks");
-                    env.terminal('copyright Daviot https://github.com/Daviot ' + env.packageJson.license + '\n');
+                    env.echo('happy', "Hy I'm your personal imp, a little helper in development tasks, to simplify your life!");
+                    env.terminal(`Find out more how to work with me at ${env.packageJson.homepage}\n`)
+                    env.terminal(`copyright ${env.packageJson.author } ${env.packageJson.license }\n`);
                 },
                 version: () => {
                     env.terminal(env.packageJson.version + '\n');
@@ -23,6 +24,9 @@ export default class About {
                 author: () => {
                     env.terminal(env.packageJson.author + '\n');
                 },
+                license: () => {
+                    env.terminal(env.packageJson.license + '\n');
+                },
                 test: {
                     emoji: () => {
                         const emoji = new Emoji();
@@ -31,6 +35,13 @@ export default class About {
                             console.log(`console ${name} ${emoji.get(name, true)}`);
                             env.terminal.green(`terminal-kit ${name} ${emoji.get(name)}\n`);
                         });
+                    },
+                    scripts: ()=> {
+                        if(env.packageJson != null && env.packageJson.scripts != null) {
+                            Object.keys(env.packageJson.scripts).map((script)=> {
+                                env.terminal.green(script).dim(` npm run ${script}`).defaultColor(`\n${env.packageJson.scripts[script]}\n\n`)
+                            });
+                        }
                     }
                 }
             }
