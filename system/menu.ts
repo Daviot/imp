@@ -98,7 +98,6 @@ export default class Menu {
 
     selected(error, res, menu) {
         this.env.terminal.clear();
-        debugger;
         // error appears
         if (error != null) {
             this.env.terminal.red(error);
