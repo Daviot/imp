@@ -1,17 +1,10 @@
 # imp
 
-CLI helper to get things done faster.
+CLI helper to get things done simpler and faster.
 
-## emojies
-- (°-°) normal
-- (°~°) confused
-- (°O°) shocked
-- (^-^) amused
-- (^ᴗ^) happy
-- (ᴗ_ᴗ) sad
-- (×_×) dead
+Help automating and simplifying development tasks.
 
-## todo
+## Roadmap
 
 ### 0.0.1
 
