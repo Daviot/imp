@@ -18,16 +18,19 @@ CLI helper to get things done faster.
 - [x] create logo
 - [x] create emojis
 - [x] add "about" module
-- [ ] add autocomplete
-- [ ] add command suggestion
+- [x] add autocomplete
+- [ ] add fuzzy search for the autocomplete
+- [ ] add parameters for commandline
 
 ### 0.0.2
 
-- [ ] Magento 2 cache handling
-- [ ] Magento 2 status check
+- [ ] add local module configuration
+- [ ] generator to create own module configuration of the current directory
 
 ### 0.0.3
 
+- [ ] Magento 2 cache handling
+- [ ] Magento 2 status check
 - [ ] include Magento 2 cache-cleaner.js
 
 ### 0.0.4
