@@ -1,6 +1,6 @@
 import { Env } from './../../models/env';
 
-export default class Quit {
+export default class QuitModule {
     constructor(config, env: Env) {
         env.event.emit('imp:module:add', {
             config: config,

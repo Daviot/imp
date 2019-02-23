@@ -1,6 +1,6 @@
 import { Env } from './../../models/env';
 
-export default class Demo {
+export default class DemoModule {
     constructor(config, env: Env) {
         env.event.emit('imp:module:add', {
             config: config,
