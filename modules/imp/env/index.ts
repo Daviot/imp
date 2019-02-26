@@ -1,5 +1,5 @@
-import { Env } from './../../models/env';
-import Emoji from '../../ui/emoji';
+import { Env } from './../../../models/env';
+import Emoji from '../../../ui/emoji';
 
 export default class EnvModule {
     constructor(config, env: Env) {

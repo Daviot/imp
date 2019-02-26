@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 const pjson = require('./package.json');
-const config_modules = require('./config/modules.json');
+const configModules = require('./config/modules.json');
 // main tool dependencies
 const { spawn } = require('child_process');
 const commander = require('commander');
@@ -15,10 +15,12 @@ import Autoloader from './system/autoloader';
 import { Env } from './models/env';
 import { EventEmitter } from 'events';
 // define modules to compile them -.-
-import About from './modules/about/index';
-import Magento2 from './modules/magento2/index';
 import AutoComplete from './system/auto-complete';
 import Events from './system/events';
+
+function method() {
+    console.log(this);
+}
 
 // cli arguments
 commander.version(pjson.version).parse(process.argv);
@@ -62,20 +64,21 @@ eventProvider.menu(menu);
 
 if (parseInt(pjson.version.split('.')[0], 10) < 1) {
     env.echo('confused', 'Work currently in progress!!!');
-    terminal.red(`Don't use this before version ${terminal.str.bold('1.x')} and it's currently in version ${terminal.str.bold(pjson.version)}, seriously`);
-    console.log('');
+    terminal.red(`Don't use this before version ${terminal.str.bold('1.x')} and it's currently in version ${terminal.str.bold(pjson.version)}, seriously\n`);
 }
 
 
 // Autoload the modules of the configuration
-const modules = new Autoloader(jetpack, config_modules, env);
+const autoloader = new Autoloader(jetpack, configModules, env);
+eventProvider.autoloader(autoloader);
+autoloader.init();
 
 // create auto complete
-const autoCompleteList = menu.getList();
-const autoComplete = new AutoComplete(env, autoCompleteList, menu.menu);
+/*const commandList = menu.getList();
+const autoComplete = new AutoComplete(env, commandList, menu.menu);
 eventProvider.autoComplete(autoComplete);
-console.log(autoCompleteList);
 
 env.event.emit('imp:auto-complete:start');
+*/
 
 //menu.build();

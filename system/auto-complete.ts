@@ -1,19 +1,19 @@
 import { Env } from '../models/env';
-import { MethodResult } from '../models/method';
+import { MethodResult, Command } from '../models/method';
 import { timingSafeEqual } from 'crypto';
 
 export default class AutoComplete {
     config;
     env: Env;
     menu: any;
-    list: string[];
-    constructor(env: Env, list: string[], menu: any) {
-        this.list = list;
+    commandList: Command[];
+    constructor(env: Env, commandList: Command[], menu: any) {
+        this.commandList = commandList;
         if (env != null) {
             this.env = env;
             this.menu = menu;
             this.config = {
-                autoComplete: list,
+                autoComplete: commandList,
                 autoCompleteHint: true,
                 autoCompleteMenu: {
                     cancelable: true,
@@ -31,9 +31,9 @@ export default class AutoComplete {
             process.exit();
         }
     }
-    build(autoComplete: string[] = null, next: Function = null) {
-        if (autoComplete == null) {
-            autoComplete = this.list;
+    build(commandList: Command[] = null, next: Function = null) {
+        if (commandList == null) {
+            commandList = this.commandList;
         }
         // fallback callback
         if (next == null) {
@@ -41,53 +41,64 @@ export default class AutoComplete {
                 this.next(err, input);
             };
         }
-        this.config.autoComplete = autoComplete;
+        this.config.autoComplete = commandList.map(cl => cl.name);
         this.env.terminal.inputField(this.config, next);
     }
 
     next(err, input) {
         this.env.terminal.clear();
+        debugger;
+        if (err != null) {
+            this.env.echo('dead', 'An error occured');
+            console.log(err);
+            process.exit();
+        }
         // canceled input
         if ((input == null || input == '') && err == null) {
             this.env.event.emit('imp:auto-complete:start');
         } else {
-            if (this.list.indexOf(input) >= 0) {
-                //@todo insert fuzzy search/best match
-                if(err != null) {
-                    this.env.echo('dead', 'An error occured')
-                    console.log(err);
-                    process.exit();
-                }
-                //@todo call the selected method
-                const methodResult = this.findMethod(input);
-                if (methodResult != null && methodResult.method != null) {
+            const result = this.findCommand(input);
+            if (result != null) {
+                if (result.method != null) {
                     this.env.echo('happy', `method "${this.env.terminal.str.green(input)}" found`);
                     // display infos about the module
-                    if (methodResult.config != null) {
-                        this.env.terminal('Module ').bold(`${methodResult.config.name}\n`);
-                        if (methodResult.config.description != null && methodResult.config.description != '') {
-                            this.env.terminal.dim(`${methodResult.config.description}\n`);
+                    if (result.config != null) {
+                        this.env.terminal('Module ').bold(`${result.config.name}\n`);
+                        if (result.config.description != null && result.config.description != '') {
+                            this.env.terminal.dim(`${result.config.description}\n`);
                         }
                     }
                     this.env.terminal('\n');
-                    methodResult.method(this.env);
+                    result.method(this.env);
                 } else {
                     this.env.echo('sad', `can't find the method "${this.env.terminal.str.red(input)}"`);
                 }
                 process.exit();
             } else {
-                this.env.echo('confused', `I don't know what "${this.env.terminal.str.green(input)}" means?`);
+                //@todo insert fuzzy search/best match
+                this.env.echo('confused', `I don't know what "${this.env.terminal.str.red(input)}" means?`);
                 this.env.event.emit('imp:auto-complete:start');
             }
         }
     }
 
+    findCommand(input: string): MethodResult | null {
+        //let methodPath = input.split(':');
+        console.log('list', this.commandList)
+        const command = this.commandList.filter(cl => cl.name == input.trim().toLowerCase());
+        console.log('')
+        console.log(command)
+        process.exit();
+        return null;
+    }
     findMethod(input: string): MethodResult | null {
         let methodPath = input.split(':');
 
         let method = null,
             config = null;
 
+        console.log(this.commandList);
+        process.exit();
         if (methodPath.length > 0) {
             // the modules are build in another way
             const moduleMethod = this.menu.filter(m => m.config.module == methodPath[0]);

@@ -1,5 +1,6 @@
 import { AutoloadModule } from '../models/config-modules';
 import { Env } from '../models/env';
+import { Command } from '../models/method';
 
 export default class Menu {
     menu: any = null;
@@ -32,7 +33,7 @@ export default class Menu {
         });
     }
 
-    getList(): string[] {
+    getList(): Command[] {
         let list = [];
         //console.log('getlist')
         //console.log(this.menu);
@@ -43,16 +44,16 @@ export default class Menu {
         return list;
     }
 
-    buildList(parent, parentName): string[] {
-        let partial = [];
+    buildList(parent, parentName): Command[] {
+        let partial:Command[] = [];
         if(parent.hasOwnProperty('_')) {
-            partial.push(parentName);
+            partial.push(new Command(parentName, parent._));
         }
         const keys = Object.keys(parent);
         keys.filter(key => key != '_').map((key)=> {
             // is a callable function, finish
             if(typeof parent[key] == 'function') {
-                partial.push(this.combineChildWithParentKey(parentName,key))
+                partial.push(new Command(this.combineChildWithParentKey(parentName,key), parent[key]))
             }
             if(typeof parent[key] == 'object') {
                 const partialChild = this.buildList(parent[key], this.combineChildWithParentKey(parentName,key));

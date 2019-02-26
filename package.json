@@ -1,6 +1,6 @@
 {
   "name": "dev-imp",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "CLI helper to get things done faster.",
   "main": "index.js",
   "scripts": {

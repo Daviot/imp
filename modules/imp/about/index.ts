@@ -1,11 +1,12 @@
-import { Env } from './../../models/env';
-import Emoji from '../../ui/emoji';
+import { Env } from '.././../../models/env';
+import Emoji from '../../../ui/emoji';
 
 export default class AboutModule {
     constructor(config, env: Env) {
+        /*
         env.event.emit('imp:module:add', {
             config: config,
-            // defines the menu entries for quick navigation and the select menu
+            // defines the module itself
             menu: {
                 _: () => {
                     env.echo('happy', "Hy I'm your personal imp, a little helper in development tasks, to simplify your life!");
@@ -46,5 +47,6 @@ export default class AboutModule {
                 }
             }
         });
+        */
     }
 }

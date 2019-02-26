@@ -1,4 +1,4 @@
-import { Env } from './../../models/env';
+import { Env } from './../../../models/env';
 
 export default class QuitModule {
     constructor(config, env: Env) {

@@ -1,21 +1,11 @@
 {
-    "autoload": [
-        "About",
-        {
-            "name": "Environment",
-            "module": "env",
-            "description": "module to retrieve informations about the environment and the system itself"
-        },
-        {
-            "name": "Magento",
-            "module": "magento2",
-            "description": "module full of magento helpers and wrappers"
-        },
-        "Demo",
-        {
-            "name": "Quit",
-            "module": "quit",
-            "alias": ["x", "exit", "stop"]
-        }
+    "load": [
+        "imp/demo"
+    ],
+    "load1": [
+        "imp/env",
+        "imp/quit",
+        "imp/demo",
+        "daviot/magento2"
     ]
 }

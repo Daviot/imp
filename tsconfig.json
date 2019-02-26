@@ -1,12 +1,13 @@
 {
     "compilerOptions": {
         "module": "commonjs",
-        "target": "es5",
+        "target": "es6",
         "noImplicitAny": false,
         "outDir": "./built/",
         "rootDir": ".",
         "sourceMap": true,
-        "moduleResolution": "node"
+        "moduleResolution": "node",
+        "experimentalDecorators": true
     },
     "files": ["index.ts"],
     "include": ["**/*.ts"],
