@@ -1,6 +1,7 @@
-import { AutoloadModule } from '../models/config-modules';
 import { Env } from '../models/env';
 import { Command } from '../models/method';
+import { ImpModule } from '../models/module';
+import { clone } from './helper';
 
 export default class Menu {
     menu: any = null;
@@ -15,9 +16,29 @@ export default class Menu {
         }
     }
 
-    add(config, data) {
-        const conf = new AutoloadModule(config);
-        this.menu.push({ name: conf.name, config: conf, methods: data });
+    add(name, module) {
+        const config = this.getConfigOfModule(module);
+        console.log(config)
+        this.menu.push(config);
+        // load the methods of the module
+        console.log(module.methods.length)
+        if(module.methods != null && module.methods.length > 0) {
+            for(const methodIndex in module.methods) {
+                let method = clone(module.methods[methodIndex]);
+                method.command = `${config.module}:${method.module}`;
+                // the function itself
+                method.func = module[method.name];
+                // the context for the function
+                method.context = module;
+                // to call the function the context must be applied
+                // method.func.apply(module);
+                this.menu.push(method);
+            }
+        }
+        console.log(this.menu)
+        process.exit();
+        console.log('menu-add', config);
+        //this.menu.push({ name: conf.name, config: conf, methods: data });
     }
 
     get(name: string) {
@@ -37,26 +58,33 @@ export default class Menu {
         let list = [];
         //console.log('getlist')
         //console.log(this.menu);
-        this.menu.map((menuEntry)=> {
+        this.menu.map(menuEntry => {
             const partial = this.buildList(menuEntry.methods, menuEntry.config.module);
             list.push(...partial);
         });
         return list;
     }
 
+    getConfigOfModule(module: ImpModule) {
+        if(module == null) {
+            return null;
+        }
+        return module.getConfigAll();
+    }
+
     buildList(parent, parentName): Command[] {
-        let partial:Command[] = [];
-        if(parent.hasOwnProperty('_')) {
+        let partial: Command[] = [];
+        if (parent.hasOwnProperty('_')) {
             partial.push(new Command(parentName, parent._));
         }
         const keys = Object.keys(parent);
-        keys.filter(key => key != '_').map((key)=> {
+        keys.filter(key => key != '_').map(key => {
             // is a callable function, finish
-            if(typeof parent[key] == 'function') {
-                partial.push(new Command(this.combineChildWithParentKey(parentName,key), parent[key]))
+            if (typeof parent[key] == 'function') {
+                partial.push(new Command(this.combineChildWithParentKey(parentName, key), parent[key]));
             }
-            if(typeof parent[key] == 'object') {
-                const partialChild = this.buildList(parent[key], this.combineChildWithParentKey(parentName,key));
+            if (typeof parent[key] == 'object') {
+                const partialChild = this.buildList(parent[key], this.combineChildWithParentKey(parentName, key));
                 partial.push(...partialChild);
             }
         });
@@ -64,7 +92,7 @@ export default class Menu {
     }
 
     combineChildWithParentKey(parent: string, child: string) {
-        return `${parent}:${child}`
+        return `${parent}:${child}`;
     }
 
     allNames() {

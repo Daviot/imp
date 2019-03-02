@@ -11,6 +11,15 @@ export function imp(data:any = null) {
         if (target.methods == null) {
             target.methods = [];
         }
-        target.methods.push(new ImpModuleMethod({name: propertyKey, aliases: data.aliases, command: data.command}));
+        let name = propertyKey;
+        if(data.name != null && data.name != '') {
+            name = data.name;
+        }
+        let module = propertyKey;
+        if(data.module != null && data.module != '') {
+            module = data.module;
+        }
+        console.log(module)
+        target.methods.push(new ImpModuleMethod({name, module, aliases: data.aliases, command: data.command}));
     };
 }

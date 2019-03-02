@@ -34,6 +34,7 @@ export default class AutoComplete {
     build(commandList: Command[] = null, next: Function = null) {
         if (commandList == null) {
             commandList = this.commandList;
+            console.log(this.commandList);
         }
         // fallback callback
         if (next == null) {
@@ -42,6 +43,7 @@ export default class AutoComplete {
             };
         }
         this.config.autoComplete = commandList.map(cl => cl.name);
+        process.exit();
         this.env.terminal.inputField(this.config, next);
     }
 

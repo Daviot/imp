@@ -23,8 +23,8 @@ export default class Events {
         });
         this.env.event.on('imp:module:load:all', modules => {
             console.log('all loaded');
-            console.log(Object.keys(modules[0]))
-            console.log(modules[0]['methods'])
+            //console.log(Object.keys(modules[0]));
+            console.log(modules[0]['methods']);
         });
     }
 
@@ -33,12 +33,17 @@ export default class Events {
         this.env.event.on('imp:module:loaded', data => {
             //console.log(data);
         });
-        this.env.event.on('imp:module:add', data => {
-            //console.log('imp:module:add', data);
-            if (data != null && data.hasOwnProperty('config')) {
-                if (data.hasOwnProperty('menu')) {
-                    menu.add(data.config, data.menu);
+        this.env.event.on('imp:module:load:after', data => {
+            // build the menu entry for the new loaded module
+            //console.log('menu', data);
+            if(data != null) {
+                if(data.name != null && data.data != null) {
+                    menu.add(data.name, data.data);
+                } else {
+                    console.error('wrong data in menu callback', data);
                 }
+            } else {
+                console.error('empty menu callback, somethings gone terrible wrong');
             }
         });
     }
@@ -47,6 +52,9 @@ export default class Events {
         this.env.event.on('imp:auto-complete:start', () => {
             this.env.echo('amused', 'What can I do for you?');
             autoComplete.build();
+        });
+        this.env.event.on('imp:module:load:all', modules => {
+            this.env.event.emit('imp:auto-complete:start');
         });
     }
 }

@@ -14,8 +14,6 @@ import Menu from './system/menu';
 import Autoloader from './system/autoloader';
 import { Env } from './models/env';
 import { EventEmitter } from 'events';
-// define modules to compile them -.-
-import AutoComplete from './system/auto-complete';
 import Events from './system/events';
 
 // cli arguments
@@ -70,10 +68,10 @@ eventProvider.autoloader(autoloader);
 autoloader.init();
 
 // create auto complete
-/*const commandList = menu.getList();
-const autoComplete = new AutoComplete(env, commandList, menu.menu);
-eventProvider.autoComplete(autoComplete);
-
+//const commandList = menu.getList();
+//const autoComplete = new AutoComplete(env, commandList, menu.menu);
+//eventProvider.autoComplete(autoComplete);
+/*
 env.event.emit('imp:auto-complete:start');
 */
 

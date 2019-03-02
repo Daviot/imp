@@ -1,4 +1,5 @@
 import { AutoloadModule } from "./config-modules";
+import { ImpModuleConfig } from "./module";
 
 export class MethodResult {
     method: Function;
