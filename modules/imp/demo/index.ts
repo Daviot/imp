@@ -1,6 +1,6 @@
 import { Env } from '../../../models/env';
 import { ImpModule, ImpModuleConfig } from '../../../models/module';
-import { isMethod } from '../../../system/decorators';
+import { imp } from '../../../system/decorators';
 
 export default class DemoModule extends ImpModule {
     constructor(config: ImpModuleConfig, env: Env) {
@@ -22,14 +22,14 @@ export default class DemoModule extends ImpModule {
         //     }
         // });
     }
-    @isMethod({
+    @imp({
         aliases: ['ws']
     })
     website() {
         console.log(this.env.packageJson.homepage);
     }
 
-    @isMethod()
+    @imp()
     author() {
         console.log(this.env.packageJson.author);
     }

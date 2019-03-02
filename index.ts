@@ -18,10 +18,6 @@ import { EventEmitter } from 'events';
 import AutoComplete from './system/auto-complete';
 import Events from './system/events';
 
-function method() {
-    console.log(this);
-}
-
 // cli arguments
 commander.version(pjson.version).parse(process.argv);
 
