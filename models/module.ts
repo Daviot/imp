@@ -17,6 +17,11 @@ export class ImpModuleData {
         }
     }
 }
+
+export class ImpModuleDataNode extends ImpModuleData {
+    context: Object;
+    type: ImpModuleDataNodeType;
+}
 export class ImpModuleConfig extends ImpModuleData {
     // the module name this should be the unique identifier
     module: string;
@@ -101,15 +106,26 @@ export class ImpModuleMethod {
     constructor(data) {
         if(data.name != null) {
             this.name = data.name;
+        } else {
+            throw `Missing name for method\n${JSON.stringify(data)}`;
         }
         if(data.aliases != null) {
             this.aliases = data.aliases;
         }
-        if(data.command != null) {
-            this.command = data.command;
-        }
         if(data.module != null) {
             this.module = data.module;
+        } else {
+            this.module = this.name.toLowerCase();
+        }
+        if(data.command != null) {
+            this.command = data.command;
+        } else {
+            this.command = this.module;
         }
     }
+}
+
+export enum ImpModuleDataNodeType {
+    Module,
+    Method
 }

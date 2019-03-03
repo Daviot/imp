@@ -1,6 +1,6 @@
 import { Env } from '../models/env';
 import { Command } from '../models/method';
-import { ImpModule } from '../models/module';
+import { ImpModule, ImpModuleDataNode, ImpModuleDataNodeType } from '../models/module';
 import { clone } from './helper';
 
 export default class Menu {
@@ -17,78 +17,51 @@ export default class Menu {
     }
 
     add(name, module) {
-        const config = this.getConfigOfModule(module);
-        console.log(config)
+        const config: ImpModuleDataNode = this.getConfigOfModule(module);
+        console.log(`[menu] module ${config.name} ${config.command}`);
         this.menu.push(config);
         // load the methods of the module
-        console.log(module.methods.length)
-        if(module.methods != null && module.methods.length > 0) {
-            for(const methodIndex in module.methods) {
-                let method = clone(module.methods[methodIndex]);
-                method.command = `${config.module}:${method.module}`;
+        if (module.methods != null && module.methods.length > 0) {
+            for (const methodIndex in module.methods) {
+                const origMethod = module.methods[methodIndex];
+                let method: ImpModuleDataNode = clone(origMethod);
+                // build the command
+                method.command = this.combineChildWithParentKey(config.command, method.command);
                 // the function itself
-                method.func = module[method.name];
+                method.func = module[origMethod.command];
                 // the context for the function
                 method.context = module;
+                method.type = ImpModuleDataNodeType.Method;
                 // to call the function the context must be applied
                 // method.func.apply(module);
                 this.menu.push(method);
+                console.log(`[menu] method ${method.name} ${method.command}`);
             }
         }
-        console.log(this.menu)
-        process.exit();
-        console.log('menu-add', config);
-        //this.menu.push({ name: conf.name, config: conf, methods: data });
     }
 
-    get(name: string) {
-        return this.getChild(this.menu, name);
+    getList(): string[] {
+        return this.menu.filter(me => me != null && me.context != null).map(me => me.command);
     }
 
-    getChild(parent: any, name: string) {
-        if (parent == null) {
+    getByCommand(command: string) {
+        if (command == null || this.menu == null || this.menu.length == 0) {
             return null;
         }
-        return parent.find(item => {
-            return item.name == name;
-        });
+        return this.menu.find(me => me.command == command);
     }
 
-    getList(): Command[] {
-        let list = [];
-        //console.log('getlist')
-        //console.log(this.menu);
-        this.menu.map(menuEntry => {
-            const partial = this.buildList(menuEntry.methods, menuEntry.config.module);
-            list.push(...partial);
-        });
-        return list;
-    }
-
-    getConfigOfModule(module: ImpModule) {
-        if(module == null) {
+    getConfigOfModule(module: ImpModule): ImpModuleDataNode {
+        if (module == null) {
             return null;
         }
-        return module.getConfigAll();
-    }
-
-    buildList(parent, parentName): Command[] {
-        let partial: Command[] = [];
-        if (parent.hasOwnProperty('_')) {
-            partial.push(new Command(parentName, parent._));
+        let config = <any>module.getConfigAll();
+        config.context = module;
+        if ((<any>module).default != null) {
+            config.func = (<any>module).default;
         }
-        const keys = Object.keys(parent);
-        keys.filter(key => key != '_').map(key => {
-            // is a callable function, finish
-            if (typeof parent[key] == 'function') {
-                partial.push(new Command(this.combineChildWithParentKey(parentName, key), parent[key]));
-            }
-            if (typeof parent[key] == 'object') {
-                const partialChild = this.buildList(parent[key], this.combineChildWithParentKey(parentName, key));
-                partial.push(...partialChild);
-            }
-        });
-        return partial;
+        config.type = ImpModuleDataNodeType.Module;
+        return config;
     }
 
     combineChildWithParentKey(parent: string, child: string) {
@@ -97,122 +70,5 @@ export default class Menu {
 
     allNames() {
         return this.menu.filter(m => m.name != null && m.name != '').map(m => m.name);
-    }
-
-    build(menuEntries = null, menu = null, options = null) {
-        // when nothing is available try to get menu
-        if (menuEntries == null) {
-            menuEntries = this.allNames();
-        }
-        if (menu == null) {
-            menu = this.menu;
-        }
-        // check if something is available
-        if (menuEntries == null || menuEntries.length == 0) {
-            this.env.echo('dead', 'No menu entries available');
-            process.exit();
-        }
-        // default options
-        if (options == null) {
-            options = {
-                selectedStyle: this.env.terminal.green,
-                cancelable: true
-            };
-        }
-
-        this.env.terminal.singleLineMenu(menuEntries, options, (error, res) => {
-            this.selected(error, res, menu);
-        });
-    }
-
-    selected(error, res, menu) {
-        this.env.terminal.clear();
-        // error appears
-        if (error != null) {
-            this.env.terminal.red(error);
-        }
-        // stop when selection was canceled
-        if (res.canceled == true) {
-            this.env.echo('dead', `U canceled, bye`);
-            process.exit();
-        }
-
-        if (menu == null) {
-            this.env.echo('dead', `No menu to choose from`);
-            process.exit();
-        }
-        // get the selected module
-        const module = this.getChild(menu, res.selectedText);
-
-        if (module != null && module.methods != null) {
-            const keys = Object.keys(module.methods);
-
-            // check if default method is available and call it
-            if (typeof module.methods == 'function') {
-                module.methods(this.env);
-            }
-            if (keys.indexOf('_') >= 0) {
-                module.methods._(this.env);
-            }
-            //console.log(menu);
-            // build the submenu when available
-            let subMenuKeys = keys.filter(k => {
-                return k != '_';
-            });
-            const subMenu = subMenuKeys.map(k => {
-                let mod = module.methods[k];
-                let modName = `${module.config.module}:${k}`;
-                let description = mod._description ? mod._description : '';
-                let methods = null;
-                switch ((typeof mod).toLowerCase()) {
-                    case 'function':
-                        methods = mod;
-                        break;
-                    case 'object':
-                        // only the default is available
-                        if (mod.hasOwnProperty('_')) {
-                            methods = mod._;
-                        }
-                        // all properties starting with a _ are properties of the parent
-                        const methodKeys = Object.keys(mod).filter(k => k.indexOf('_') != 0);
-                        if (methodKeys.length > 0) {
-                            // reset methods
-                            methods = {};
-                            // set default
-                            if (mod.hasOwnProperty('_')) {
-                                methods._ = mod._;
-                            }
-                            // set all other methods
-                            methodKeys.map(mk => {
-                                methods[mk] = mod[mk];
-                            });
-                        }
-                        break;
-                    default:
-                        this.env.echo('shocked', `unknown type "${typeof mod}" of "${modName}"`);
-                        break;
-                }
-                const data = {
-                    name: k,
-                    config: {
-                        name: k,
-                        description: description,
-                        module: modName
-                    },
-                    methods: methods
-                };
-                return data;
-            });
-            // build the menu for the next level
-            if (subMenuKeys.length > 0) {
-                this.build(subMenuKeys, subMenu);
-            } else {
-                // when no submenu is available the work is done
-                process.exit();
-            }
-        } else {
-            this.env.echo('shocked', `Module ${module.name} has no methods!`);
-            process.exit();
-        }
     }
 }

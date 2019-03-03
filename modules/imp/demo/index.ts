@@ -11,6 +11,10 @@ export default class DemoModule extends ImpModule {
 
         this.validateConfig();
     }
+    // will be called when the module itself is called
+    default() {
+        console.log('default');
+    }
     @imp({
         name: 'Website',
         aliases: ['ws']

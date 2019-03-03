@@ -13,31 +13,26 @@ export default class Events {
 
     autoloader(autoloader: Autoloader) {
         this.env.event.on('imp:module:load:before', name => {
-            console.log('before', name);
+            console.log(`[autoloader] before ${name}`);
         });
         this.env.event.on('imp:module:load', name => {
-            console.log('load', name);
+            console.log(`[autoloader] load ${name}`);
         });
-        this.env.event.on('imp:module:load:after', name => {
-            console.log('after', name);
+        this.env.event.on('imp:module:load:after', module => {
+            console.log(`[autoloader] after ${module.name}`);
         });
         this.env.event.on('imp:module:load:all', modules => {
-            console.log('all loaded');
-            //console.log(Object.keys(modules[0]));
-            console.log(modules[0]['methods']);
+            console.log(`[autoloader] ${modules.length} modules loaded`);
         });
     }
-
+    
     menu(menu: Menu) {
-        // bind events
-        this.env.event.on('imp:module:loaded', data => {
-            //console.log(data);
-        });
+        // bind events for the menu
         this.env.event.on('imp:module:load:after', data => {
             // build the menu entry for the new loaded module
             //console.log('menu', data);
-            if(data != null) {
-                if(data.name != null && data.data != null) {
+            if (data != null) {
+                if (data.name != null && data.data != null) {
                     menu.add(data.name, data.data);
                 } else {
                     console.error('wrong data in menu callback', data);
@@ -46,6 +41,12 @@ export default class Events {
                 console.error('empty menu callback, somethings gone terrible wrong');
             }
         });
+        this.env.event.on('imp:module:load:all', modules => {
+            // create auto complete
+            const commandList = menu.getList();
+            const autoComplete = new AutoComplete(this.env, commandList, menu);
+            this.autoComplete(autoComplete);
+        });
     }
 
     autoComplete(autoComplete: AutoComplete) {
@@ -53,8 +54,6 @@ export default class Events {
             this.env.echo('amused', 'What can I do for you?');
             autoComplete.build();
         });
-        this.env.event.on('imp:module:load:all', modules => {
-            this.env.event.emit('imp:auto-complete:start');
-        });
+        this.env.event.emit('imp:auto-complete:start');
     }
 }

@@ -67,10 +67,6 @@ const autoloader = new Autoloader(jetpack, configModules, env);
 eventProvider.autoloader(autoloader);
 autoloader.init();
 
-// create auto complete
-//const commandList = menu.getList();
-//const autoComplete = new AutoComplete(env, commandList, menu.menu);
-//eventProvider.autoComplete(autoComplete);
 /*
 env.event.emit('imp:auto-complete:start');
 */

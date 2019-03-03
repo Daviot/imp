@@ -1,13 +1,15 @@
 import { Env } from '../models/env';
 import { MethodResult, Command } from '../models/method';
 import { timingSafeEqual } from 'crypto';
+import { ImpModuleDataNode, ImpModuleDataNodeType } from '../models/module';
+import { readlink } from 'fs';
 
 export default class AutoComplete {
     config;
     env: Env;
     menu: any;
-    commandList: Command[];
-    constructor(env: Env, commandList: Command[], menu: any) {
+    commandList: string[];
+    constructor(env: Env, commandList: string[], menu: any) {
         this.commandList = commandList;
         if (env != null) {
             this.env = env;
@@ -31,7 +33,7 @@ export default class AutoComplete {
             process.exit();
         }
     }
-    build(commandList: Command[] = null, next: Function = null) {
+    build(commandList: string[] = null, next: Function = null) {
         if (commandList == null) {
             commandList = this.commandList;
             console.log(this.commandList);
@@ -42,8 +44,7 @@ export default class AutoComplete {
                 this.next(err, input);
             };
         }
-        this.config.autoComplete = commandList.map(cl => cl.name);
-        process.exit();
+        this.config.autoComplete = commandList;
         this.env.terminal.inputField(this.config, next);
     }
 
@@ -61,20 +62,32 @@ export default class AutoComplete {
         } else {
             const result = this.findCommand(input);
             if (result != null) {
-                if (result.method != null) {
-                    this.env.echo('happy', `method "${this.env.terminal.str.green(input)}" found`);
-                    // display infos about the module
-                    if (result.config != null) {
-                        this.env.terminal('Module ').bold(`${result.config.name}\n`);
-                        if (result.config.description != null && result.config.description != '') {
-                            this.env.terminal.dim(`${result.config.description}\n`);
-                        }
-                    }
-                    this.env.terminal('\n');
-                    result.method(this.env);
-                } else {
-                    this.env.echo('sad', `can't find the method "${this.env.terminal.str.red(input)}"`);
+                console.log(result);
+                switch (result.type) {
+                    case ImpModuleDataNodeType.Module:
+                        result.func.apply(result.context);
+                        break;
+                    case ImpModuleDataNodeType.Method:
+                        result.func.apply(result.context);
+                        break;
+                    default:
+                        throw `Unknown node type ${result.type} of ${result.name}`;
+                        break;
                 }
+                // if (result.method != null) {
+                //     this.env.echo('happy', `method "${this.env.terminal.str.green(input)}" found`);
+                //     // display infos about the module
+                //     if (result.config != null) {
+                //         this.env.terminal('Module ').bold(`${result.config.name}\n`);
+                //         if (result.config.description != null && result.config.description != '') {
+                //             this.env.terminal.dim(`${result.config.description}\n`);
+                //         }
+                //     }
+                //     this.env.terminal('\n');
+                //     result.method(this.env);
+                // } else {
+                //     this.env.echo('sad', `can't find the method "${this.env.terminal.str.red(input)}"`);
+                // }
                 process.exit();
             } else {
                 //@todo insert fuzzy search/best match
@@ -84,14 +97,8 @@ export default class AutoComplete {
         }
     }
 
-    findCommand(input: string): MethodResult | null {
-        //let methodPath = input.split(':');
-        console.log('list', this.commandList)
-        const command = this.commandList.filter(cl => cl.name == input.trim().toLowerCase());
-        console.log('')
-        console.log(command)
-        process.exit();
-        return null;
+    findCommand(input: string): ImpModuleDataNode | null {
+        return this.menu.getByCommand(input);
     }
     findMethod(input: string): MethodResult | null {
         let methodPath = input.split(':');
