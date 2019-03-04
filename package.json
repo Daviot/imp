@@ -31,7 +31,8 @@
     "fs-jetpack": "^2.2.0",
     "node-dependency-injection": "^2.2.1",
     "string-similarity": "^3.0.0",
-    "terminal-kit": "^1.26.11"
+    "terminal-kit": "^1.26.11",
+    "winston": "^3.2.1"
   },
   "devDependencies": {
     "node-inspect": "^1.11.5"
