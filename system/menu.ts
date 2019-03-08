@@ -1,10 +1,10 @@
 import { Env } from '../models/env';
 import { Command } from '../models/method';
-import { ImpModule, ImpModuleDataNode, ImpModuleDataNodeType } from '../models/module';
+import { ImpModule, ImpModuleDataNode, ImpModuleDataNodeType, ImpModuleConfig } from '../models/module';
 import { clone } from './helper';
 
 export default class Menu {
-    menu: any = null;
+    menu: ImpModuleDataNode[] = null;
     env: Env = null;
 
     constructor(env: Env) {
@@ -24,18 +24,20 @@ export default class Menu {
         if (module.methods != null && module.methods.length > 0) {
             for (const methodIndex in module.methods) {
                 const origMethod = module.methods[methodIndex];
-                let method: ImpModuleDataNode = clone(origMethod);
-                // build the command
-                method.command = this.combineChildWithParentKey(config.command, method.command);
-                // the function itself
-                method.func = module[origMethod.command];
-                // the context for the function
-                method.context = module;
-                method.type = ImpModuleDataNodeType.Method;
-                // to call the function the context must be applied
-                // method.func.apply(module);
-                this.menu.push(method);
-                console.log(`[menu] method ${method.name} ${method.command}`);
+                if (origMethod.command != null && origMethod.command != 'default') {
+                    let method: ImpModuleDataNode = clone(origMethod);
+                    // build the command
+                    method.command = this.combineChildWithParentKey(config.command, method.command);
+                    // the function itself
+                    method.func = module[origMethod.command];
+                    // the context for the function
+                    method.context = module;
+                    method.type = ImpModuleDataNodeType.Method;
+                    // to call the function the context must be applied
+                    // method.func.apply(module);
+                    this.menu.push(method);
+                    console.log(`[menu] method ${method.name} ${method.command}`);
+                }
             }
         }
     }
@@ -43,12 +45,50 @@ export default class Menu {
     getList(): string[] {
         return this.menu.filter(me => me != null && me.context != null).map(me => me.command);
     }
+    getListConfig() {
+        return this.menu.filter(me => me != null && me.context != null).map(me => {
+            if(me != null && me.func != null) {
+                delete me.func;
+            }
+            if(me != null && me.context != null) {
+                delete me.context;
+            }
+            return me;
+        });
+    }
 
     getByCommand(command: string) {
         if (command == null || this.menu == null || this.menu.length == 0) {
             return null;
         }
         return this.menu.find(me => me.command == command);
+    }
+    getByCommandAlias(command: string) {
+        if (command == null || this.menu == null || this.menu.length == 0) {
+            return null;
+        }
+        return this.menu.find(me => {
+            console.log(me)
+            // find the first menu with the command as alias
+            if ((<any>me).aliases == null || (<any>me).aliases.length == 0) {
+                return false;
+            }
+            const result = (<any>me).aliases.find(alias => alias === command);
+            return result != null && result.length > 0;
+        });
+    }
+    find(search: string): ImpModuleDataNode[] | null {
+        if (search == null || this.menu == null || this.menu.length == 0) {
+            return null;
+        }
+        const fuzzy = this.menu.filter(me => {
+            return (
+                me.command.toLowerCase().indexOf(search) >= 0 ||
+                me.name.toLowerCase().indexOf(search) >= 0 ||
+                (me.description != null && me.description.toLowerCase().indexOf(search) >= 0)
+            );
+        });
+        return fuzzy;
     }
 
     getConfigOfModule(module: ImpModule): ImpModuleDataNode {

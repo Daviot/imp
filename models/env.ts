@@ -5,10 +5,12 @@ export class Env {
     echo: any;
     packageJson: any;
     terminal: any;
-    constructor(event, echo, packageJson, terminal) {
+    logger: any;
+    constructor(event, echo, packageJson, terminal, logger) {
         this.event = event;
         this.echo = echo;
         this.packageJson = packageJson;
         this.terminal = terminal;
+        this.logger = logger;
     }
 }

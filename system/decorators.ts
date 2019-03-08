@@ -3,7 +3,7 @@ import { ImpModuleMethod } from "../models/module";
 //https://blog.wizardsoftheweb.pro/typescript-decorators-introduction/
 
 // indicates that the method with the decorator is callable as command
-export function imp(data:any = null) {
+export function method(data:any = null) {
     if(data == null) {
         data = {};
     }
@@ -19,7 +19,6 @@ export function imp(data:any = null) {
         if(data.module != null && data.module != '') {
             module = data.module;
         }
-        console.log(module)
         target.methods.push(new ImpModuleMethod({name, module, aliases: data.aliases, command: data.command}));
     };
 }

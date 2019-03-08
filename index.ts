@@ -6,6 +6,7 @@ const configModules = require('./config/modules.json');
 const { spawn } = require('child_process');
 const commander = require('commander');
 const enquirer = require('enquirer');
+const winston = require('winston');
 const c = require('ansi-colors');
 import * as jetpack from 'fs-jetpack';
 import Logo from './ui/logo';
@@ -47,7 +48,10 @@ const env = new Env(
         terminal.green(emoji.get(mood) + ' ').defaultColor(message + '\n');
     },
     pjson,
-    terminal
+    terminal,
+    winston.createLogger({
+        level: 'debug'
+    })
 );
 
 // contains all events

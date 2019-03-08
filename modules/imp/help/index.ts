@@ -6,25 +6,23 @@ export default class DemoModule extends ImpModule {
     constructor(config: ImpModuleConfig, env: Env) {
         super(config, env);
         // configure the current module
-        this.setConfig('name', 'Demo');
-        this.setConfig('description', 'This is a demo plugin to show how to build your first plugin');
+        this.setConfig('name', 'Help');
+        this.setConfig('aliases', ['?']);
+        this.setConfig('description', 'Show all modules and their options');
 
         this.validateConfig();
     }
     // will be called when the module itself is called
     default() {
-        console.log('default');
-    }
-    @method({
-        name: 'Website',
-        aliases: ['ws']
-    })
-    website() {
-        console.log(this.env.packageJson.homepage);
+        this.env.event.emit('imp:module:all', list => {
+            this.showList(list);
+        });
     }
 
-    @method()
-    author() {
-        console.log(this.env.packageJson.author);
+    showList(list) {
+        list.map(entry => {
+            this.env.terminal(`${entry.command}\n`);
+            console.log(entry)
+        });
     }
 }

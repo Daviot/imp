@@ -47,6 +47,11 @@ export default class Events {
             const autoComplete = new AutoComplete(this.env, commandList, menu);
             this.autoComplete(autoComplete);
         });
+        this.env.event.on('imp:module:all', (callback: Function) => {
+            if(callback != null && typeof callback == 'function') {
+                callback(menu.getListConfig());
+            }
+        });
     }
 
     autoComplete(autoComplete: AutoComplete) {
