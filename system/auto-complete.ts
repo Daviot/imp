@@ -39,7 +39,7 @@ export default class AutoComplete {
     build(commandList: string[] = null, next: Function = null) {
         if (commandList == null) {
             commandList = this.commandList;
-            console.log(this.commandList);
+            //console.log(this.commandList);
         }
         // fallback callback
         if (next == null) {
@@ -70,7 +70,7 @@ export default class AutoComplete {
             // try to find command
             const result = this.findCommand(input);
             if (result != null) {
-                console.log('[autocomplete]', result);
+                //console.log('[autocomplete]', result);
                 switch (result.type) {
                     case ImpModuleDataNodeType.Module:
                         result.func.apply(result.context);
@@ -119,7 +119,7 @@ export default class AutoComplete {
         let method = null,
             config = null;
 
-        console.log(this.commandList);
+        //console.log(this.commandList);
         process.exit();
         if (methodPath.length > 0) {
             // the modules are build in another way

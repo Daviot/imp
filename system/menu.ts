@@ -68,7 +68,7 @@ export default class Menu {
             return null;
         }
         return this.menu.find(me => {
-            console.log(me)
+            //console.log(me)
             // find the first menu with the command as alias
             if ((<any>me).aliases == null || (<any>me).aliases.length == 0) {
                 return false;
