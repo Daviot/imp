@@ -55,7 +55,7 @@ export default class Events {
     }
 
     autoComplete(autoComplete: AutoComplete) {
-        this.env.event.on('imp:auto-complete:start', (firstCall: Boolean) => {
+        this.env.event.on('imp:auto-complete:start', (firstCall: boolean) => {
             autoComplete.build(null, null, firstCall);
         });
         this.env.event.emit('imp:auto-complete:start', true);
