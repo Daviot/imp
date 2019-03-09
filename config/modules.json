@@ -1,7 +1,8 @@
 {
     "load": [
         "imp/help",
-        "imp/demo"
+        "imp/demo",
+        "imp/quit"
     ],
     "load1": [
         "imp/env",

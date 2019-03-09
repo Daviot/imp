@@ -1,16 +1,19 @@
-import { Env } from './../../../models/env';
+import { Env } from '../../../models/env';
+import { ImpModule, ImpModuleConfig } from '../../../models/module';
+import { method } from '../../../system/decorators';
 
-export default class QuitModule {
-    constructor(config, env: Env) {
-        env.event.emit('imp:module:add', {
-            config: config,
-            // defines the menu entries for quick navigation and the select menu
-            menu: {
-                _: () => {
-                    env.echo('normal', `Bye`);
-                    process.exit();
-                }
-            }
-        });
+export default class QuitModule extends ImpModule {
+    constructor(config: ImpModuleConfig, env: Env) {
+        super(config, env);
+        // configure the current module
+        this.setConfig('name', 'Quit');
+        this.setConfig('aliases', ['q', 'exit', 'cancel', 'abort', 'stop', 'end']);
+        this.setConfig('description', 'Ends the conversation with imp');
+
+        this.validateConfig();
+    }
+    // will be called when the module itself is called
+    default() {
+        
     }
 }
