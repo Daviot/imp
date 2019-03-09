@@ -49,6 +49,8 @@ const env = new Env(
     },
     pjson,
     terminal,
+    cwd,
+    homedir,
     winston.createLogger({
         level: 'debug'
     })
