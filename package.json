@@ -26,8 +26,6 @@
   "homepage": "https://github.com/Daviot/imp#readme",
   "dependencies": {
     "@types/node": "^10.12.18",
-    "commander": "^2.19.0",
-    "enquirer": "^2.3.0",
     "fs-jetpack": "^2.2.0",
     "node-dependency-injection": "^2.2.1",
     "string-similarity": "^3.0.0",

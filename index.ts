@@ -4,8 +4,6 @@ const pjson = require('./package.json');
 const configModules = require('./config/modules.json');
 // main tool dependencies
 const { spawn } = require('child_process');
-const commander = require('commander');
-const enquirer = require('enquirer');
 const winston = require('winston');
 const c = require('ansi-colors');
 import * as jetpack from 'fs-jetpack';
@@ -16,9 +14,6 @@ import Autoloader from './system/autoloader';
 import { Env } from './models/env';
 import { EventEmitter } from 'events';
 import Events from './system/events';
-
-// cli arguments
-commander.version(pjson.version).parse(process.argv);
 
 // ui
 const logo = new Logo();
