@@ -14,6 +14,6 @@ export default class QuitModule extends ImpModule {
     }
     // will be called when the module itself is called
     default() {
-        
+        process.exit();
     }
 }
