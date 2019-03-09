@@ -36,7 +36,11 @@ export default class AutoComplete {
             process.exit();
         }
     }
-    build(commandList: string[] = null, next: Function = null) {
+    build(commandList: string[] = null, next: Function = null, firstCall = false) {
+        this.env.echo('amused', 'What can I do for you?');
+        if (firstCall) {
+            this.env.echo('happy', 'Tip: type ? to see everything I can do for you!');
+        }
         if (commandList == null) {
             commandList = this.commandList;
             //console.log(this.commandList);
@@ -60,7 +64,7 @@ export default class AutoComplete {
             process.exit();
         }
         // canceled input
-        if(input == null&& err == null) {
+        if (input == null && err == null) {
             this.env.echo('happy', 'Have a nice day, Bye');
             process.exit();
         }
@@ -84,12 +88,12 @@ export default class AutoComplete {
                 process.exit();
             } else {
                 //@todo insert fuzzy search/best match
-                
+
                 const fuzzy = this.findFuzzyCommand(input);
-                
+
                 this.env.echo('confused', `I don't know what "${this.env.terminal.str.red(input)}" means?`);
-                if(fuzzy != null && fuzzy.length > 0) {
-                    this.env.echo('normal', `Are you look for one of these?`);
+                if (fuzzy != null && fuzzy.length > 0) {
+                    this.env.echo('normal', `Are you looking for one of these?`);
                     // display possible values
                     this.printFindResults(fuzzy, input);
                     this.env.event.emit('imp:auto-complete:start');
@@ -97,14 +101,13 @@ export default class AutoComplete {
                     this.env.echo('dead', 'Please retry');
                     process.exit();
                 }
-
             }
         }
     }
 
     findCommand(input: string): ImpModuleDataNode | null {
         let result = this.menu.getByCommand(input);
-        if(result == null) {
+        if (result == null) {
             result = this.menu.getByCommandAlias(input);
         }
         return result;
@@ -154,7 +157,7 @@ export default class AutoComplete {
     }
 
     printFindResults(result: ImpModuleDataNode[], input: string) {
-        if(result == null) {
+        if (result == null) {
             return null;
         }
         this.interfaces.commandList(result, input);

@@ -55,10 +55,9 @@ export default class Events {
     }
 
     autoComplete(autoComplete: AutoComplete) {
-        this.env.event.on('imp:auto-complete:start', () => {
-            this.env.echo('amused', 'What can I do for you?');
-            autoComplete.build();
+        this.env.event.on('imp:auto-complete:start', (firstCall: Boolean) => {
+            autoComplete.build(null, null, firstCall);
         });
-        this.env.event.emit('imp:auto-complete:start');
+        this.env.event.emit('imp:auto-complete:start', true);
     }
 }
