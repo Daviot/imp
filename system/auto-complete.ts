@@ -39,7 +39,7 @@ export default class AutoComplete {
     build(commandList: string[] = null, next: Function = null, firstCall = false) {
         this.env.echo('amused', 'What can I do for you?');
         if (firstCall) {
-            this.env.echo('happy', 'Tip: type ? to see everything I can do for you!');
+            this.env.echo('happy', 'Tip: type ? to see everything I can do for you or ESC to end this conversation');
         }
         if (commandList == null) {
             commandList = this.commandList;
