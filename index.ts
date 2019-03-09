@@ -67,9 +67,3 @@ if (parseInt(pjson.version.split('.')[0], 10) < 1) {
 const autoloader = new Autoloader(jetpack, configModules, env);
 eventProvider.autoloader(autoloader);
 autoloader.init();
-
-/*
-env.event.emit('imp:auto-complete:start');
-*/
-
-//menu.build();
