@@ -22,6 +22,7 @@ export default class DemoModule extends ImpModule {
     }
 
     showList(list) {
+            this.env.echo('amused', 'Here is everything i can do for you');
             this.env.terminal('\n');
             for (let i in list) {
                 const entry = list[i];
