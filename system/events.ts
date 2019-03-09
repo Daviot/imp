@@ -4,6 +4,7 @@ import { timingSafeEqual } from 'crypto';
 import AutoComplete from './auto-complete';
 import Autoloader from './autoloader';
 import { on } from 'cluster';
+import Params from './params';
 
 export default class Events {
     env: Env;
@@ -41,9 +42,13 @@ export default class Events {
                 console.error('empty menu callback, somethings gone terrible wrong');
             }
         });
-        this.env.event.on('imp:module:load:all', modules => {
+        this.env.event.on('imp:module:load:all', async modules => {
             // create auto complete
             const commandList = menu.getList();
+            const params = new Params(this.env, menu);
+            // console.log(process.argv);
+            await params.execute();
+            // process.exit();
             const autoComplete = new AutoComplete(this.env, commandList, menu);
             this.autoComplete(autoComplete);
         });
@@ -55,6 +60,8 @@ export default class Events {
     }
 
     autoComplete(autoComplete: AutoComplete) {
+        this.env.event.on('imp:auto-complete:init', (firstCall: boolean) => {
+        });
         this.env.event.on('imp:auto-complete:start', (firstCall: boolean) => {
             autoComplete.build(null, null, firstCall);
         });

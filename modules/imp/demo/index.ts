@@ -20,11 +20,11 @@ export default class DemoModule extends ImpModule {
         aliases: ['ws']
     })
     website() {
-        console.log(this.env.packageJson.homepage);
+        this.env.terminal(this.env.packageJson.homepage+ '\n');
     }
 
     @method()
     author() {
-        console.log(this.env.packageJson.author);
+        this.env.terminal(this.env.packageJson.author+ '\n');
     }
 }

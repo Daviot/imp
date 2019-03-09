@@ -72,19 +72,10 @@ export default class AutoComplete {
             this.env.event.emit('imp:auto-complete:start');
         } else {
             // try to find command
-            const result = this.findCommand(input);
+            const result = this.menu.findCommand(input);
             if (result != null) {
                 //console.log('[autocomplete]', result);
-                switch (result.type) {
-                    case ImpModuleDataNodeType.Module:
-                        result.func.apply(result.context);
-                        break;
-                    case ImpModuleDataNodeType.Method:
-                        result.func.apply(result.context);
-                        break;
-                    default:
-                        throw `Unknown node type ${result.type} of ${result.name}`;
-                }
+                this.menu.execute(result);
                 process.exit();
             } else {
                 //@todo insert fuzzy search/best match
@@ -103,14 +94,6 @@ export default class AutoComplete {
                 }
             }
         }
-    }
-
-    findCommand(input: string): ImpModuleDataNode | null {
-        let result = this.menu.getByCommand(input);
-        if (result == null) {
-            result = this.menu.getByCommandAlias(input);
-        }
-        return result;
     }
 
     findFuzzyCommand(input: string) {

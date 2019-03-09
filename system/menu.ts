@@ -46,17 +46,26 @@ export default class Menu {
         return this.menu.filter(me => me != null && me.context != null).map(me => me.command);
     }
     getListConfig() {
-        return this.menu.filter(me => me != null && me.context != null).map(me => {
-            if(me != null && me.func != null) {
-                delete me.func;
-            }
-            if(me != null && me.context != null) {
-                delete me.context;
-            }
-            return me;
-        });
+        return this.menu
+            .filter(me => me != null && me.context != null)
+            .map(me => {
+                if (me != null && me.func != null) {
+                    delete me.func;
+                }
+                if (me != null && me.context != null) {
+                    delete me.context;
+                }
+                return me;
+            });
     }
 
+    findCommand(input: string): ImpModuleDataNode | null {
+        let result = this.getByCommand(input);
+        if (result == null) {
+            result = this.getByCommandAlias(input);
+        }
+        return result;
+    }
     getByCommand(command: string) {
         if (command == null || this.menu == null || this.menu.length == 0) {
             return null;
@@ -110,5 +119,22 @@ export default class Menu {
 
     allNames() {
         return this.menu.filter(m => m.name != null && m.name != '').map(m => m.name);
+    }
+
+    execute(command: ImpModuleDataNode) {
+        if (command == null || command.func == null || command.context == null) {
+            console.log('somethings empty', command)
+            return;
+        }
+        switch (command.type) {
+            case ImpModuleDataNodeType.Module:
+                command.func.apply(command.context);
+                break;
+            case ImpModuleDataNodeType.Method:
+                command.func.apply(command.context);
+                break;
+            default:
+                throw `Unknown node type ${command.type} of ${command.name}`;
+        }
     }
 }
