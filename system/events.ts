@@ -45,11 +45,11 @@ export default class Events {
         this.env.event.on('imp:module:load:all', async modules => {
             // create auto complete
             const commandList = menu.getList();
-            const params = new Params(this.env, menu);
+            const autoComplete = new AutoComplete(this.env, commandList, menu);
+            const params = new Params(this.env, menu, autoComplete);
             // console.log(process.argv);
             await params.execute();
             // process.exit();
-            const autoComplete = new AutoComplete(this.env, commandList, menu);
             this.autoComplete(autoComplete);
         });
         this.env.event.on('imp:module:all', (callback: Function) => {

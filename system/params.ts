@@ -1,12 +1,13 @@
 import Menu from './menu';
 import { ImpModuleDataNode } from '../models/module';
 import { Env } from '../models/env';
+import AutoComplete from './auto-complete';
 
 /**
  * Handles Cli Arguments aka Parameters and execute them based on the loader modules
  */
 export default class Params {
-    constructor(private env: Env, private menu: Menu) {}
+    constructor(private env: Env, private menu: Menu, private autoComplete: AutoComplete) {}
 
     getParams() {
         if (process.argv.length < 2) {
@@ -26,9 +27,14 @@ export default class Params {
             return;
         }
         const validParams = params.map(p => this.find(p)).filter(p => this.validate(p));
-
+        console.log('[params]', `Given params "${params.join('", "')}"`);
+        console.log('[params]', `Valid params "${validParams.join('", "')}"`);
         if (validParams.length == 0) {
             this.env.echo('sad', `Unknown params ${params.join(', ')}`);
+            // try to search if any command can found for the given commands
+            params.map(param => {
+                this.autoComplete.next(null, param);
+            });
             return;
         }
 
