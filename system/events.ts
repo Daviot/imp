@@ -22,16 +22,16 @@ export default class Events {
 
     autoloader(autoloader: Autoloader) {
         this.env.event.on('imp:module:load:before', name => {
-            console.log(`[autoloader] before ${name}`);
+            this.env.logger.log('autoloader/event/before', name);
         });
         this.env.event.on('imp:module:load', name => {
-            console.log(`[autoloader] load ${name}`);
+            this.env.logger.log('autoloader/event/load', name);
         });
         this.env.event.on('imp:module:load:after', module => {
-            console.log(`[autoloader] after ${module.name}`);
+            this.env.logger.log('autoloader/event/after', module.name);
         });
         this.env.event.on('imp:module:load:all', modules => {
-            console.log(`[autoloader] ${modules.length} modules loaded`);
+            this.env.logger.log('autoloader/event/all',  `${modules.length} modules loaded`);
         });
     }
 

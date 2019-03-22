@@ -13,16 +13,16 @@ export default class DemoModule extends ImpModule {
     }
     // will be called when the module itself is called
     async default(next) {
-        console.log('default2');
+        this.log('default2');
         const data = await this.env.jetpack.readAsync('./file.txt');
 
-        console.log('data', data)
+        this.log(data)
         // this.env.jetpack.readAsync('./file.txt').then(data => {
         //     console.log(data);
         //     next();
         // });
         //console.log(image.data);
-        console.log('end');
+        this.log('end');
         next();
     }
     @method({

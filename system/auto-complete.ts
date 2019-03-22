@@ -32,7 +32,7 @@ export default class AutoComplete {
             };
             this.interfaces = new Interfaces(this.env.terminal);
         } else {
-            console.log('[autocomplete]', 'missing environment');
+            this.env.logger.log('autocomplete', 'missing environment');
             this.env.event.emit('imp:quit');
         }
     }
@@ -57,10 +57,9 @@ export default class AutoComplete {
 
     next(err, input) {
         this.env.terminal.clear();
-        debugger;
         if (err != null) {
             this.env.echo('dead', 'An error occured');
-            console.log('[autocomplete]', err);
+            this.env.logger.log('autocomplete/next/error',  err);
             this.env.event.emit('imp:quit');
         }
         // canceled input
@@ -75,7 +74,7 @@ export default class AutoComplete {
             const result = this.menu.findCommand(input);
             if (result != null) {
                 //console.log('[autocomplete]', result);
-                console.log('[autocomplete]', result)
+                this.env.logger.log('autocomplete/next/command', result)
                 this.menu.execute(result)
             } else {
                 //@todo insert fuzzy search/best match

@@ -18,7 +18,7 @@ export default class Menu {
 
     add(name, module) {
         const config: ImpModuleDataNode = this.getConfigOfModule(module);
-        console.log(`[menu] module ${config.name} ${config.command}`);
+        this.env.logger.log('menu', `module ${config.name} ${config.command}`);
         this.menu.push(config);
         // load the methods of the module
         if (module.methods != null && module.methods.length > 0) {
@@ -36,7 +36,7 @@ export default class Menu {
                     // to call the function the context must be applied
                     // method.func.apply(module);
                     this.menu.push(method);
-                    console.log(`[menu] method ${method.name} ${method.command}`);
+                    this.env.logger.log('menu', `method ${method.name} ${method.command}`);
                 }
             }
         }
@@ -123,30 +123,35 @@ export default class Menu {
 
     execute(command: ImpModuleDataNode) {
         if (command == null || command.func == null || command.context == null) {
-            console.log('somethings empty', command);
+            this.env.logger.log('menu/execute',`somethings empty ${JSON.stringify(command)}`);
             return;
         }
-        console.log('[menu]', 'execute');
+        this.env.logger.log('menu/execute', '');
         let result = null;
         const args = [
             () => {
                 this.final();
             }
         ];
-        switch (command.type) {
-            case ImpModuleDataNodeType.Module:
-                return command.func.apply(command.context, args);
-                break;
-            case ImpModuleDataNodeType.Method:
-                return command.func.apply(command.context, args);
-                break;
-            default:
-                throw `Unknown node type ${command.type} of ${command.name}`;
+        try {
+            switch (command.type) {
+                case ImpModuleDataNodeType.Module:
+                    return command.func.apply(command.context, args);
+                    break;
+                case ImpModuleDataNodeType.Method:
+                    return command.func.apply(command.context, args);
+                    break;
+                default:
+                    throw `Unknown node type ${command.type} of ${command.name}`;
+            }
+        } catch (e) {
+            console.log(e);
+            this.quit();
         }
     }
 
     final() {
-        console.log('[menu/final]');
+        this.env.logger.log('menu/final', '');
         this.quit();
         // @todo allow restart of the app
         /*if (!this.env.config.restartImp) {
@@ -156,7 +161,9 @@ export default class Menu {
         this.env.event.emit('imp:restart');*/
     }
     quit() {
-        console.log('[menu/quit]');
-        process.exit();
+        this.env.logger.log('menu/quit', '');
+        setTimeout(()=> {
+            process.exit();
+        }, 10);
     }
 }

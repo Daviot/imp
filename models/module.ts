@@ -93,6 +93,10 @@ export class ImpModule {
             this.config.module = this.config.name.toLowerCase().trim();
         }
     }
+
+    log(message: string | Object)  {
+        this.env.logger.log(this, message);
+    }
 }
 
 export class ImpModuleMethod {

@@ -11,7 +11,7 @@ export default class Params {
 
     getParams() {
         if (process.argv.length < 2) {
-            console.error('[params/getParams]', 'Arguments not valid');
+            this.env.logger.log('params/getParams', 'Arguments not valid');
             this.env.event.emit('imp:quit');
         }
         // remove the first 2 arguments, first is environment and second is the scriptname
@@ -20,7 +20,7 @@ export default class Params {
             return arg.replace(/^-*(.*)/gi, '$1');
         });
 
-        console.error('[params/getParams]', params.join(', '));
+        this.env.logger.log('params/getParams', params.join(','));
         return params;
     }
 
@@ -30,8 +30,8 @@ export default class Params {
             return;
         }
         const validParams = params.map(p => this.find(p)).filter(p => this.validate(p));
-        console.log('[params]', `Given params "${params.join('", "')}"`);
-        console.log('[params]', `Valid params "${validParams.join('", "')}"`);
+        this.env.logger.log('params/execute', `Given params "${params.join('", "')}"`);
+        this.env.logger.log('params/execute', `Valid params "${validParams.join('", "')}"`);
         if (validParams.length == 0) {
             this.env.echo('sad', `Unknown params ${params.join(', ')}`);
             // try to search if any command can found for the given commands
@@ -53,8 +53,7 @@ export default class Params {
     find(param: string) {
         const result = this.menu.findCommand(param);
         if (result != null) {
-            console.log(
-                '[params/find]',
+            this.env.logger.log('params/find',
                 `name "${result.name}" command "${result.command}" module "${(<any>result).module}"`
             );
         }

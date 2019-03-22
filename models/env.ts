@@ -1,4 +1,5 @@
 import { EventEmitter } from 'events';
+import { Logger } from '../system/logger';
 
 export class Env {
     event: EventEmitter;
@@ -8,7 +9,7 @@ export class Env {
     terminal: any;
     workingDir: string;
     homeDir: string;
-    logger: any;
+    logger: Logger;
     jetpack: any;
     constructor(event, echo, packageJson, config, terminal, workingDir, homeDir, logger, jetpack) {
         this.event = event;

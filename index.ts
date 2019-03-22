@@ -14,6 +14,7 @@ import Autoloader from './system/autoloader';
 import { Env, EnvConfig } from './models/env';
 import { EventEmitter } from 'events';
 import Events from './system/events';
+import { Logger } from './system/logger';
 
 // ui
 const logo = new Logo();
@@ -47,9 +48,7 @@ const env = new Env(
     terminal,
     cwd,
     homedir,
-    winston.createLogger({
-        level: 'debug'
-    }),
+    new Logger(jetpack),
     jetpack
 );
 
