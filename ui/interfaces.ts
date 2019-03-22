@@ -34,7 +34,7 @@ export default class Interfaces {
         if (split.length == 1) {
             return styling(text);
         }
-        return split.map(part => styling(part)).join(this.terminal.str.bgCyan.black(highlight));
+        return split.map(part => styling(part)).join(this.terminal.str.bgYellow.black(highlight));
         //return styling('') + text.replace(regex, `${this.terminal.str.bgGreen.black(highlight)}${styling('')}`);
     }
 }
