@@ -18,7 +18,7 @@ Help automating and simplifying development tasks.
 - [x] add "about" module
 - [x] add autocomplete
 - [x] add fuzzy search for the autocomplete
-- [ ] add parameters for commandline
+- [x] add parameters for commandline
 
 ### 0.0.3
 
@@ -42,6 +42,10 @@ Help automating and simplifying development tasks.
 
 - [ ] Magento 2 module generator
 - [ ] Magento 2 system validator
+
+### Future
+
+- [ ] Execute Multiple Parameters when given as parameters in sequence
 
 ## Troubles
 
