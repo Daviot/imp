@@ -7,7 +7,7 @@ export default class EnvModule {
             config: config,
             // defines the menu entries for quick navigation and the select menu
             menu: {
-                scripts: () => {
+                scripts: (next) => {
                     if (env.packageJson != null && env.packageJson.scripts != null) {
                         Object.keys(env.packageJson.scripts).map(script => {
                             env.terminal
@@ -15,6 +15,7 @@ export default class EnvModule {
                                 .dim(` npm run ${script}`)
                                 .defaultColor(`\n${env.packageJson.scripts[script]}\n\n`);
                         });
+                        next();
                     }
                 }
             }

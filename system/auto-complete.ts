@@ -32,8 +32,8 @@ export default class AutoComplete {
             };
             this.interfaces = new Interfaces(this.env.terminal);
         } else {
-            console.log('ERROR', 'missing environment');
-            process.exit();
+            console.log('[autocomplete]', 'missing environment');
+            this.env.event.emit('imp:quit');
         }
     }
     build(commandList: string[] = null, next: Function = null, firstCall = false) {
@@ -60,13 +60,13 @@ export default class AutoComplete {
         debugger;
         if (err != null) {
             this.env.echo('dead', 'An error occured');
-            console.log(err);
-            process.exit();
+            console.log('[autocomplete]', err);
+            this.env.event.emit('imp:quit');
         }
         // canceled input
         if (input == null && err == null) {
             this.env.echo('happy', 'Have a nice day, Bye');
-            process.exit();
+            this.env.event.emit('imp:quit');
         }
         if (input == '' && err == null) {
             this.env.event.emit('imp:auto-complete:start');
@@ -75,8 +75,8 @@ export default class AutoComplete {
             const result = this.menu.findCommand(input);
             if (result != null) {
                 //console.log('[autocomplete]', result);
-                this.menu.execute(result);
-                process.exit();
+                console.log('[autocomplete]', result)
+                this.menu.execute(result)
             } else {
                 //@todo insert fuzzy search/best match
 
@@ -90,7 +90,7 @@ export default class AutoComplete {
                     this.env.event.emit('imp:auto-complete:start');
                 } else {
                     this.env.echo('dead', 'Please retry');
-                    process.exit();
+                    this.env.event.emit('imp:quit');
                 }
             }
         }
@@ -99,14 +99,14 @@ export default class AutoComplete {
     findFuzzyCommand(input: string) {
         return this.menu.find(input, true);
     }
+    // unused
     findMethod(input: string): MethodResult | null {
         let methodPath = input.split(':');
 
         let method = null,
             config = null;
 
-        //console.log(this.commandList);
-        process.exit();
+        
         if (methodPath.length > 0) {
             // the modules are build in another way
             const moduleMethod = this.menu.filter(m => m.config.module == methodPath[0]);

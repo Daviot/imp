@@ -10,6 +10,14 @@ export default class Events {
     env: Env;
     constructor(env: Env) {
         this.env = env;
+
+        this.env.event.on('imp:quit', () => {
+            this.env.event.emit('imp:menu:quit');
+        });
+
+        this.env.event.on('imp:restart', () => {
+            this.env.event.emit('imp:auto-complete:start', false);
+        });
     }
 
     autoloader(autoloader: Autoloader) {
@@ -26,7 +34,7 @@ export default class Events {
             console.log(`[autoloader] ${modules.length} modules loaded`);
         });
     }
-    
+
     menu(menu: Menu) {
         // bind events for the menu
         this.env.event.on('imp:module:load:after', data => {
@@ -53,15 +61,18 @@ export default class Events {
             this.autoComplete(autoComplete);
         });
         this.env.event.on('imp:module:all', (callback: Function) => {
-            if(callback != null && typeof callback == 'function') {
+            if (callback != null && typeof callback == 'function') {
                 callback(menu.getListConfig());
             }
+        });
+
+        this.env.event.on('imp:menu:quit', () => {
+            menu.quit();
         });
     }
 
     autoComplete(autoComplete: AutoComplete) {
-        this.env.event.on('imp:auto-complete:init', (firstCall: boolean) => {
-        });
+        this.env.event.on('imp:auto-complete:init', (firstCall: boolean) => {});
         this.env.event.on('imp:auto-complete:start', (firstCall: boolean) => {
             autoComplete.build(null, null, firstCall);
         });

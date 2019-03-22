@@ -13,7 +13,8 @@ export default class QuitModule extends ImpModule {
         this.validateConfig();
     }
     // will be called when the module itself is called
-    default() {
-        process.exit();
+    default(next) {
+        this.env.event.emit('imp:quit');
+        next();
     }
 }

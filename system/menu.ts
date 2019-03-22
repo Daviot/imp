@@ -123,18 +123,40 @@ export default class Menu {
 
     execute(command: ImpModuleDataNode) {
         if (command == null || command.func == null || command.context == null) {
-            console.log('somethings empty', command)
+            console.log('somethings empty', command);
             return;
         }
+        console.log('[menu]', 'execute');
+        let result = null;
+        const args = [
+            () => {
+                this.final();
+            }
+        ];
         switch (command.type) {
             case ImpModuleDataNodeType.Module:
-                command.func.apply(command.context);
+                return command.func.apply(command.context, args);
                 break;
             case ImpModuleDataNodeType.Method:
-                command.func.apply(command.context);
+                return command.func.apply(command.context, args);
                 break;
             default:
                 throw `Unknown node type ${command.type} of ${command.name}`;
         }
+    }
+
+    final() {
+        console.log('[menu/final]');
+        this.quit();
+        // @todo allow restart of the app
+        /*if (!this.env.config.restartImp) {
+            this.quit();
+        }
+        this.env.config.restartImp = false;
+        this.env.event.emit('imp:restart');*/
+    }
+    quit() {
+        console.log('[menu/quit]');
+        process.exit();
     }
 }

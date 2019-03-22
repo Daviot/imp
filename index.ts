@@ -11,7 +11,7 @@ import Logo from './ui/logo';
 import Emoji from './ui/emoji';
 import Menu from './system/menu';
 import Autoloader from './system/autoloader';
-import { Env } from './models/env';
+import { Env, EnvConfig } from './models/env';
 import { EventEmitter } from 'events';
 import Events from './system/events';
 
@@ -43,12 +43,14 @@ const env = new Env(
         terminal.green(emoji.get(mood) + ' ').defaultColor(message + '\n');
     },
     pjson,
+    new EnvConfig(),
     terminal,
     cwd,
     homedir,
     winston.createLogger({
         level: 'debug'
-    })
+    }),
+    jetpack
 );
 
 // contains all events

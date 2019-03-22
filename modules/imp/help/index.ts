@@ -15,10 +15,12 @@ export default class DemoModule extends ImpModule {
         this.validateConfig();
     }
     // will be called when the module itself is called
-    default() {
+    default(next) {
+        this.env.config.restartImp = true;
         this.env.event.emit('imp:module:all', list => {
             this.showList(list);
         });
+        next();
     }
 
     showList(list) {

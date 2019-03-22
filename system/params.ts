@@ -11,14 +11,17 @@ export default class Params {
 
     getParams() {
         if (process.argv.length < 2) {
-            console.error('Arguments not valid');
-            process.exit();
+            console.error('[params/getParams]', 'Arguments not valid');
+            this.env.event.emit('imp:quit');
         }
         // remove the first 2 arguments, first is environment and second is the scriptname
-        return process.argv.slice(2).map(arg => {
+        const params = process.argv.slice(2).map(arg => {
             // remove the - or -- for the params to get the correct value
             return arg.replace(/^-*(.*)/gi, '$1');
         });
+
+        console.error('[params/getParams]', params.join(', '));
+        return params;
     }
 
     async execute() {
@@ -42,15 +45,19 @@ export default class Params {
         const executeParams = validParams.slice(0, 1);
         // execute the commands in the given order
         executeParams.map(command => {
-            this.menu.execute(command)
+            this.menu.execute(command);
         });
-        // execute only this commands and then exit imp
-        process.exit();
+        // @todo execute only this commands and then exit imp
     }
 
     find(param: string) {
         const result = this.menu.findCommand(param);
-        console.log(result);
+        if (result != null) {
+            console.log(
+                '[params/find]',
+                `name "${result.name}" command "${result.command}" module "${(<any>result).module}"`
+            );
+        }
         return result;
     }
 

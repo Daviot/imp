@@ -12,19 +12,31 @@ export default class DemoModule extends ImpModule {
         this.validateConfig();
     }
     // will be called when the module itself is called
-    default() {
-        console.log('default');
+    async default(next) {
+        console.log('default2');
+        const data = await this.env.jetpack.readAsync('./file.txt');
+
+        console.log('data', data)
+        // this.env.jetpack.readAsync('./file.txt').then(data => {
+        //     console.log(data);
+        //     next();
+        // });
+        //console.log(image.data);
+        console.log('end');
+        next();
     }
     @method({
         name: 'Website',
         aliases: ['ws']
     })
-    website() {
-        this.env.terminal(this.env.packageJson.homepage+ '\n');
+    website(next) {
+        this.env.terminal(this.env.packageJson.homepage + '\n');
+        next();
     }
 
     @method()
-    author() {
-        this.env.terminal(this.env.packageJson.author+ '\n');
+    author(next) {
+        this.env.terminal(this.env.packageJson.author + '\n');
+        next();
     }
 }
