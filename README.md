@@ -31,6 +31,7 @@ Help automating and simplifying development tasks.
 - [ ] Magento 2 status check
 - [ ] Magento 2 setup(composer:update and setup:upgrade)
 - [ ] include Magento 2 cache-cleaner.js
+- [ ] combine messages of grunt watch, guard and cache-cleaner
 
 ### 0.0.5
 
