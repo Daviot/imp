@@ -42,3 +42,7 @@ Help automating and simplifying development tasks.
 
 - [ ] Magento 2 module generator
 - [ ] Magento 2 system validator
+
+## Troubles
+
+- When calling imp with parameter ?, some shells tell that no match was found, so escape the value with quotes "?" because it triggers the globbing for 0 or 1 char
