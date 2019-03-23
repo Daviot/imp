@@ -1,9 +1,7 @@
 import { Env } from '../models/env';
 import Menu from './menu';
-import { timingSafeEqual } from 'crypto';
 import AutoComplete from './auto-complete';
 import Autoloader from './autoloader';
-import { on } from 'cluster';
 import Params from './params';
 
 export default class Events {
@@ -64,6 +62,10 @@ export default class Events {
             if (callback != null && typeof callback == 'function') {
                 callback(menu.getListConfig());
             }
+        });
+
+        this.env.event.on('imp:module:executed', (name) => {
+            this.env.logger.log('module/executed', name);
         });
 
         this.env.event.on('imp:menu:quit', () => {

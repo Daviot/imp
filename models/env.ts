@@ -24,5 +24,6 @@ export class Env {
     }
 }
 export class EnvConfig {
+    runningSince = null;
     restartImp: boolean = false;
 }

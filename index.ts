@@ -15,6 +15,7 @@ import { Env, EnvConfig } from './models/env';
 import { EventEmitter } from 'events';
 import Events from './system/events';
 import { Logger } from './system/logger';
+import { getDateTime } from './system/helper';
 
 // ui
 const logo = new Logo();
@@ -35,6 +36,8 @@ const homedir = require('os').homedir();
 //console.log(homedir);
 
 // the environment for all modules
+const envConfig = new EnvConfig();
+envConfig.runningSince = new Date();
 const env = new Env(
     new EventEmitter(),
     (mood, message) => {
@@ -44,13 +47,15 @@ const env = new Env(
         terminal.green(emoji.get(mood) + ' ').defaultColor(message + '\n');
     },
     pjson,
-    new EnvConfig(),
+    envConfig,
     terminal,
     cwd,
     homedir,
     new Logger(jetpack),
     jetpack
 );
+
+env.logger.log('app', `started ${getDateTime(new Date())}`);
 
 // contains all events
 const eventProvider = new Events(env);

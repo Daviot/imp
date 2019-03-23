@@ -1,7 +1,7 @@
 import { Env } from '../models/env';
 import { Command } from '../models/method';
 import { ImpModule, ImpModuleDataNode, ImpModuleDataNodeType, ImpModuleConfig } from '../models/module';
-import { clone } from './helper';
+import { clone, getDateTime } from './helper';
 
 export default class Menu {
     menu: ImpModuleDataNode[] = null;
@@ -123,14 +123,14 @@ export default class Menu {
 
     execute(command: ImpModuleDataNode) {
         if (command == null || command.func == null || command.context == null) {
-            this.env.logger.log('menu/execute',`somethings empty ${JSON.stringify(command)}`);
+            this.env.logger.log('menu/execute', `somethings empty ${JSON.stringify(command)}`);
             return;
         }
-        this.env.logger.log('menu/execute', '');
+        this.env.logger.log('menu/execute', `${command.command}(${command.type})`);
         let result = null;
         const args = [
             () => {
-                this.final();
+                this.final(`${command.command}(type:${command.type})`);
             }
         ];
         try {
@@ -150,8 +150,9 @@ export default class Menu {
         }
     }
 
-    final() {
+    final(msg: string) {
         this.env.logger.log('menu/final', '');
+        this.env.event.emit('imp:module:executed', msg);
         this.quit();
         // @todo allow restart of the app
         /*if (!this.env.config.restartImp) {
@@ -162,7 +163,9 @@ export default class Menu {
     }
     quit() {
         this.env.logger.log('menu/quit', '');
-        setTimeout(()=> {
+        this.env.logger.log('app', `stopped ${getDateTime(new Date())}`);
+        this.env.logger.log('app', `running ${new Date().getTime() - this.env.config.runningSince.getTime()}`);
+        setTimeout(() => {
             process.exit();
         }, 10);
     }
