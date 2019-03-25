@@ -22,6 +22,7 @@ Help automating and simplifying development tasks.
 
 ### 0.0.3
 
+- [x] add logger
 - [ ] add local module configuration
 - [ ] generator to create own module configuration of the current directory
 
